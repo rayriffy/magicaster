@@ -5,6 +5,15 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@nanostores/react':
+    specifier: ^0.7.1
+    version: 0.7.1(nanostores@0.9.3)(react@18.2.0)
+  dayjs:
+    specifier: ^1.11.9
+    version: 1.11.9
+  nanostores:
+    specifier: ^0.9.3
+    version: 0.9.3
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -515,6 +524,17 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
+  /@nanostores/react@0.7.1(nanostores@0.9.3)(react@18.2.0):
+    resolution: {integrity: sha512-EXQg9N4MdI4eJQz/AZLIx3hxQ6BuBmV4Q55bCd5YCSgEOAW7tGTsIZxpRXxvxLXzflNvHTBvfrDNY38TlSVBkQ==}
+    engines: {node: ^16.0.0 || ^18.0.0 || >=20.0.0}
+    peerDependencies:
+      nanostores: ^0.9.0
+      react: '>=18.0.0'
+    dependencies:
+      nanostores: 0.9.3
+      react: 18.2.0
+    dev: false
+
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -718,6 +738,10 @@ packages:
   /csstype@3.1.2:
     resolution: {integrity: sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==}
     dev: true
+
+  /dayjs@1.11.9:
+    resolution: {integrity: sha512-QvzAURSbQ0pKdIye2txOzNaHmxtUBXerpY0FJsFXUMKbIZeFm5ht1LS/jFsrncjnmtv8HsG0W2g6c0zUjZWmpA==}
+    dev: false
 
   /debug@4.3.4:
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
@@ -996,6 +1020,11 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
     dev: true
+
+  /nanostores@0.9.3:
+    resolution: {integrity: sha512-KobZjcVyNndNrb5DAjfs0WG0lRcZu5Q1BOrfTOxokFLi25zFrWPjg+joXC6kuDqNfSt9fQwppyjUBkRPtsL+8w==}
+    engines: {node: ^16.0.0 || ^18.0.0 || >=20.0.0}
+    dev: false
 
   /node-releases@2.0.13:
     resolution: {integrity: sha512-uYr7J37ae/ORWdZeQ1xxMJe3NtdmqMC/JZK+geofDrkLUApKRHPd18/TxtBOJ4A0/+uUIliorNrfYV6s1b02eQ==}

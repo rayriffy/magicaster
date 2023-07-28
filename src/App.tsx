@@ -1,47 +1,44 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/rune.svg'
-import viteLogo from '/vite.svg'
+import { PlayerAlphabetGrid } from './components/PlayerAlphabetGrid.tsx'
+import { SelectedAlpabets } from './components/SelectedAlpabets.tsx'
+
+import { useRune } from './functions/useRune.ts'
+
 import './App.css'
-import { GameState } from './logic.ts'
+import { useTimer } from './functions/useTimer.ts'
 
 function App() {
-  const [game, setGame] = useState<GameState>()
-  useEffect(() => {
-    Rune.initClient({
-      onChange: ({ newGame }) => {
-        setGame(newGame)
-      },
-    })
-  }, [])
+  const {
+    player,
+    game,
+  } = useRune()
+  const { remaining } = useTimer(game)
 
   if (!game) {
     return <div>Loading...</div>
   }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://developers.rune.ai" target="_blank">
-          <img src={reactLogo} className="logo rune" alt="Rune logo" />
-        </a>
-      </div>
-      <h1>Vite + Rune</h1>
-      <div className="card">
-        <button onClick={() => Rune.actions.increment({ amount: 1 })}>
-          count is {game.count}
-        </button>
+    <main className="flex h-full flex-col justify-between">
+      <div className="flex justify-between">
         <p>
-          Edit <code>src/App.tsx</code> or <code>src/logic.ts</code> and save to
-          test HMR
+          Score: <b>{player?.score}</b>
+        </p>
+        <p>
+          Timer:{' '}
+          <b>
+            {String(remaining.minutes).padStart(2, '0')}:
+            {String(remaining.seconds).padStart(2, '0')}
+          </b>
         </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and Rune logos to learn more
-      </p>
-    </>
+      <SelectedAlpabets />
+      <div className="shrink-0 space-y-6">
+        <PlayerAlphabetGrid />
+        <button className="rounded-lg bg-pink-500 px-4 py-2 font-medium text-white">
+          Locked in!
+        </button>
+      </div>
+    </main>
   )
 }
 

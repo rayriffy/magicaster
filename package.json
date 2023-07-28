@@ -12,6 +12,9 @@
     "format": "prettier --write ./src"
   },
   "dependencies": {
+    "@nanostores/react": "^0.7.1",
+    "dayjs": "^1.11.9",
+    "nanostores": "^0.9.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rune-games-sdk": "^4.11.0"
