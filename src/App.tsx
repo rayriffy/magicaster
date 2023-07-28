@@ -19,20 +19,20 @@ function App() {
         setGame(newGame)
       },
     })
+
     graphicAssets.load().then(() => {
       setLoadingAssets(false)
-      console.log(PIXI.Assets.get('wizard'))
     })
   }, [])
 
-  if (!game && !loadingAssets) {
+  if (!game || loadingAssets) {
     return <div>Loading...</div>
   }
 
   return (
     <GameGUI
       mode="CHOOSE_CHARACTER_GUI"
-      props={{
+      options={{
         playerID: 'test',
         characterSelections: characterSelections,
         onSubmit: characterSelections => {

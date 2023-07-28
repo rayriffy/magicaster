@@ -29,6 +29,8 @@ const wizardSpritesheetData: PIXI.ISpritesheetData = {
 export const getSpritesheet = async (): Promise<PIXI.Spritesheet> => {
   const wizardTexture = PIXI.Assets.get('wizard') as PIXI.Texture
   if (typeof wizardTexture === 'undefined') throw 'wizard bundle not found'
+  wizardTexture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST
+
   const wizardSpritesheet = new PIXI.Spritesheet(
     wizardTexture.baseTexture,
     wizardSpritesheetData

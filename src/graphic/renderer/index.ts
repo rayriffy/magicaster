@@ -1,4 +1,5 @@
 import { Renderer } from './types'
+export { default as CharacterDisplayRenderer } from './characterDisplayRenderer'
 
 export class RenderManager {
   renderers: Renderer[] = []

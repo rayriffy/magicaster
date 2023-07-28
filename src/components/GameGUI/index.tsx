@@ -1,16 +1,17 @@
 import React, { useEffect, useRef } from 'react'
 import ChooseCharacterGUI, {
   MODE as ChooseCharacterGUIMode,
-  Props as ChooseCharacterGUIProps,
+  // Props as ChooseCharacterGUIProps,
+  Options,
 } from './ChooseCharacterGUI'
 import { RenderManager } from '../../graphic/renderer'
 
 type GameGUIProps = {
   mode: ChooseCharacterGUIMode
-  props: ChooseCharacterGUIProps
+  options: Options
 }
 
-const GameGUI: React.FC<GameGUIProps> = ({ mode, props }) => {
+const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
   const renderManagerRef = useRef<RenderManager>(new RenderManager())
 
   useEffect(() => {
@@ -19,7 +20,12 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, props }) => {
   }, [])
 
   if (mode === 'CHOOSE_CHARACTER_GUI') {
-    return <ChooseCharacterGUI {...props} />
+    return (
+      <ChooseCharacterGUI
+        renderManager={renderManagerRef.current}
+        options={options}
+      />
+    )
   }
   return null
 }

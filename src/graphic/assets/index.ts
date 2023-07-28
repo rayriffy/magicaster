@@ -27,4 +27,6 @@ export const load = async () => {
   }
 }
 
-export default assets
+export const getAssets = (): Assets | null => {
+  return assets
+}

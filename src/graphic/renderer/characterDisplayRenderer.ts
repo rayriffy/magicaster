@@ -1,30 +1,37 @@
 import * as PIXI from 'pixi.js'
-import assets from '../assets'
+import { getAssets } from '../assets'
 import { Renderer } from './types'
 
-class CharacterDisplayScene implements Renderer {
-  private app: PIXI.Application
+class CharacterDisplayRenderer implements Renderer {
+  private app: PIXI.Application<HTMLCanvasElement>
   private size: number
   private characterSprite: PIXI.Sprite
+  private randomValue: number = Math.random()
 
-  constructor(size: number, background?: string) {
-    if (assets == null) throw "assets aren't load yet"
-    this.size = size
+  constructor(parent: HTMLElement, background?: string) {
+    const assets = getAssets()
+    if (assets === null) throw "assets aren't load yet"
+
+    this.size = parent.getBoundingClientRect().width
     this.app = new PIXI.Application({ background: background ?? 'black' })
-    this.app.screen.width = this.size
-    this.app.screen.height = this.size
+    this.app.resizeTo = parent
 
     this.characterSprite = new PIXI.Sprite(
       assets.wizard.spritesheet.textures['idleWizard']
     )
-    const scale = (this.size * 0.8) / this.characterSprite.width
+    const scale = (this.size * 0.7) / this.characterSprite.width
     this.characterSprite.scale.set(scale, scale)
+    this.characterSprite.position.set(this.size / 2, this.size / 2)
+    this.characterSprite.anchor.set(0.5, 0.55)
 
     this.app.stage.addChild(this.characterSprite)
   }
 
   loop = () => {
     this.app.render()
+    this.characterSprite.position.y =
+      Math.sin(Date.now() / 500 + this.randomValue * 500) * this.size * 0.05 +
+      this.size / 2
   }
   getCanvas = () => {
     return this.app.view
@@ -35,4 +42,4 @@ class CharacterDisplayScene implements Renderer {
   }
 }
 
-export default CharacterDisplayScene
+export default CharacterDisplayRenderer
