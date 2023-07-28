@@ -2,6 +2,25 @@ import * as PIXI from 'pixi.js'
 import { getAssets } from '../assets'
 import { Renderer } from './types'
 
+const colorFragmentShader = `
+varying vec2 vTextureCoord;
+uniform sampler2D uSampler;
+
+void main(void) {
+  vec4 textureColor = texture2D(uSampler, vTextureCoord);
+  bool isPrimaryColor = abs(dot(vec4(4, 0, 103, 1)/ 256. * -1., textureColor)) < 0.01;
+  if(isPrimaryColor){
+    gl_FragColor = vec4(0, 0, 0, 1);
+    return;
+  }
+  gl_FragColor = textureColor;
+}
+`
+
+function getColorFilter(): PIXI.Filter {
+  return new PIXI.Filter(undefined, colorFragmentShader)
+}
+
 class CharacterDisplayRenderer implements Renderer {
   private app: PIXI.Application<HTMLCanvasElement>
   private size: number
@@ -20,6 +39,7 @@ class CharacterDisplayRenderer implements Renderer {
     this.characterSprite = new PIXI.Sprite(
       assets.wizard.spritesheet.textures['idleWizard']
     )
+    this.characterSprite.filters = [getColorFilter()]
     const scale = (this.size * 0.7) / this.characterSprite.width
     this.characterSprite.scale.set(scale, scale)
     this.characterSprite.position.set(this.size / 2, this.size / 2)
