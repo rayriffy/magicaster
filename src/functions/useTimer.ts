@@ -1,12 +1,15 @@
 import { useEffect, useMemo, useState } from 'react'
 import dayjs, { Dayjs } from 'dayjs'
 import duration from 'dayjs/plugin/duration'
+import { useStore } from '@nanostores/react'
 
-import { GameState } from '../logic'
+import { runeAtom } from '../context/runeAtom'
 
 dayjs.extend(duration)
 
-export const useTimer = (game: GameState | undefined) => {
+export const useTimer = () => {
+  const game = useStore(runeAtom)
+
   const [end, setEnd] = useState<Dayjs>(dayjs().add(2, 'minutes'))
   const [now, setNow] = useState<Dayjs>(dayjs())
 

@@ -6,6 +6,7 @@ import { useCallback } from 'react'
 export const SelectedAlpabets = () => {
   const gridItems = useStore(gridItemsAtom)
 
+  // click on curtain alphabet to remove from chunks
   const onRootClick = useCallback(
     (e: any) => {
       if (e.target.id.startsWith('eject-')) {

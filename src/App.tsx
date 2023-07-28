@@ -11,7 +11,7 @@ function App() {
     player,
     game,
   } = useRune()
-  const { remaining } = useTimer(game)
+  const { remaining } = useTimer()
 
   if (!game) {
     return <div>Loading...</div>

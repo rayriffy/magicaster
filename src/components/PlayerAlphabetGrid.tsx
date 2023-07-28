@@ -6,6 +6,7 @@ import { gridItemsAtom } from '../context/gridItemsAtom'
 export const PlayerAlphabetGrid: FunctionComponent = () => {
   const gridItems = useStore(gridItemsAtom)
 
+  // click to add alphabet index to chunk
   const onRootClick = useCallback((e: any) => {
     if (e.target.id.startsWith('button-alphabet-')) {
       gridItemsAtom.setKey('selectedOrder', [
@@ -19,7 +20,7 @@ export const PlayerAlphabetGrid: FunctionComponent = () => {
   return (
     <div
       id="player-grid"
-      className="grid aspect-square w-full shrink-0 grid-cols-4 items-center justify-center gap-4 bg-green-500 px-8 font-bold"
+      className="grid aspect-square w-full shrink-0 grid-cols-4 items-center justify-center gap-4 px-8 font-bold"
       onClick={onRootClick}
     >
       {gridItems.alphabets.map((item, i) => (

@@ -4,7 +4,7 @@ import type { RuneClient } from 'rune-games-sdk/multiplayer'
 export interface GameState {
   turn: number
   state: 'start' | 'end'
-  phase: ''
+  phase: 'build_word' | 'show_score' | 'planning' | 'activation' | 'review'
   players: Player[]
 }
 
@@ -23,7 +23,7 @@ Rune.initLogic({
     return {
       turn: 0,
       state: 'end',
-      phase: '',
+      phase: 'review',
       players: playerIds.map(id => ({
         id: id,
         score: 0,
