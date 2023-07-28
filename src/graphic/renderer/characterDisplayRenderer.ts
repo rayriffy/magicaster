@@ -7,14 +7,15 @@ class CharacterDisplayRenderer implements Renderer {
   private size: number
   private characterSprite: PIXI.Sprite
   private randomValue: number = Math.random()
+  private parent: HTMLElement
 
   constructor(parent: HTMLElement, background?: string) {
     const assets = getAssets()
     if (assets === null) throw "assets aren't load yet"
-
+    this.parent = parent
     this.size = parent.getBoundingClientRect().width
     this.app = new PIXI.Application({ background: background ?? 'black' })
-    this.app.resizeTo = parent
+    this.app.resizeTo = this.parent
 
     this.characterSprite = new PIXI.Sprite(
       assets.wizard.spritesheet.textures['idleWizard']
