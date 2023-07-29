@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Container from '../Container'
 import Title from '../Title'
 import CharacterDisplayer from './CharacterDisplayer'
@@ -6,6 +6,7 @@ import { RenderManager } from '../../graphic/renderer'
 import Button from '../Button'
 
 import styled from 'styled-components'
+import { CHARACTER_NUMBER } from './const'
 
 export type MODE = 'CHOOSE_CHARACTER_GUI'
 export type characterSelections = { [playerID: string]: number }
@@ -39,15 +40,20 @@ const Arranger = styled.div`
   grid-template-rows: max-content max-content 1fr max-content;
 `
 
-const CHARACTER_NUMBER = 8
-
-const ChooseCharacterGUI: React.FC<Props> = ({ renderManager }) => {
+const ChooseCharacterGUI: React.FC<Props> = ({ renderManager, options }) => {
+  const [characterIndex, setCharacterIndex] = useState<number>(
+    options.characterSelections[options.playerID] ?? 0
+  )
   return (
     <Container>
       <Arranger>
         <Title style={{ marginTop: '30px' }}>Choose Character</Title>
         <PreviewCharacterDisplayerContainer>
-          <CharacterDisplayer size="250px" renderManager={renderManager} />
+          <CharacterDisplayer
+            size="250px"
+            renderManager={renderManager}
+            characterIndex={characterIndex}
+          />
         </PreviewCharacterDisplayerContainer>
         <div>
           <CharacterDisplayersContainer>
@@ -59,6 +65,8 @@ const ChooseCharacterGUI: React.FC<Props> = ({ renderManager }) => {
                     size="55px"
                     key={index}
                     renderManager={renderManager}
+                    characterIndex={index}
+                    onClick={() => setCharacterIndex(index)}
                   />
                 )
               })}
