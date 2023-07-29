@@ -99,7 +99,7 @@ class CharacterDisplayRenderer implements Renderer {
     this.parent = parent
     this.size = parent.getBoundingClientRect().width
     this.app = new PIXI.Application({ background: background ?? 'black' })
-    // this.app.resizeTo = this.parent
+
     this.app.view.width = this.size
     this.app.view.height = this.size
 

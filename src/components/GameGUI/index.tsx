@@ -1,13 +1,21 @@
 import React, { useEffect, useRef } from 'react'
+
 import ChooseCharacterGUI, {
   MODE as ChooseCharacterGUIMode,
   Options as ChooseCharacterGUIOptions,
 } from './ChooseCharacterGUI'
+
 import LobbyGUI, {
   MODE as LobbyGUIMode,
   Options as LobbyGUIOptions,
 } from './LobbyGUI'
-import { RenderManager } from '../../graphic/renderer'
+
+import WordOrderingGUI, {
+  MODE as WordOrderingGUIMode,
+  Options as WordOrderingGUIOptions,
+} from './WordOrderingGUI'
+
+import { GameDisplayRenderer, RenderManager } from '../../graphic/renderer'
 
 type GameGUIProps =
   | {
@@ -18,12 +26,22 @@ type GameGUIProps =
       mode: LobbyGUIMode
       options: LobbyGUIOptions
     }
+  | {
+      mode: WordOrderingGUIMode
+      options: WordOrderingGUIOptions
+    }
 
 const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
   const renderManagerRef = useRef<RenderManager>(new RenderManager())
+  const gameDisplayRendererRef = useRef<GameDisplayRenderer>(
+    new GameDisplayRenderer({
+      width: window.innerWidth,
+    })
+  )
 
   useEffect(() => {
     renderManagerRef.current.start()
+    renderManagerRef.current.addRenderer(gameDisplayRendererRef.current)
     return renderManagerRef.current.stop
   }, [])
 
@@ -39,6 +57,16 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
   if (mode === 'LOBBY_GUI') {
     return <LobbyGUI options={options} />
   }
+
+  if (mode === 'WORD_ORDERING') {
+    return (
+      <WordOrderingGUI
+        gameDisplayRenderer={gameDisplayRendererRef.current}
+        options={{}}
+      />
+    )
+  }
+
   return null
 }
 
