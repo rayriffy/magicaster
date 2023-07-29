@@ -17,7 +17,7 @@ uniform sampler2D uSampler;
 uniform float uFrame;
 
 void main(void) {
-  float uvX = mod((vTextureCoord.x + uFrame), 0.8);
+  float uvX = mod((vTextureCoord.x + uFrame), 0.5);
   float uvY = vTextureCoord.y;
   vec4 textureColor = texture2D(uSampler, vec2(uvX, uvY));
   gl_FragColor = textureColor;
@@ -36,8 +36,8 @@ class TrackRenderer implements Renderer {
 
     const defaultTrackTexture =
       assets.track.spritesheet.textures['defaultTrack']
-    const scale = width / defaultTrackTexture.width
     this.sprite = new PIXI.Sprite(defaultTrackTexture)
+    const scale = width / this.sprite.width
     this.sprite.scale = { x: scale, y: scale }
 
     this.uniforms = {
@@ -60,13 +60,12 @@ class TrackRenderer implements Renderer {
   }
 
   setRound = (round: number) => {
-    this.uniforms.uFrame = round % 0.8
+    this.uniforms.uFrame = round
   }
 
   loop(delta: number): void {
     if (!this.isRunning) return
-    this.uniforms.uFrame =
-      (this.uniforms.uFrame + delta / this.speedPerRound) % 0.8
+    this.uniforms.uFrame = this.uniforms.uFrame + delta / this.speedPerRound
   }
 
   getSprite = (): PIXI.Sprite => {
