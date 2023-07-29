@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { getAssets } from '../assets'
 import { Renderer, Vec3 } from './types'
+import math from 'mathjs'
 
 type Uniforms = {
   uPrimaryColor: Vec3
