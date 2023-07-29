@@ -38,12 +38,26 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
     new GameDisplayRenderer({
       width: window.innerWidth,
       characterColor: CHARACTER_COLOR_LIST.slice(0, 4),
+      forcusedCharacterIndex: 1,
     })
   )
 
   useEffect(() => {
     renderManagerRef.current.start()
     renderManagerRef.current.addRenderer(gameDisplayRendererRef.current)
+    setTimeout(() => {
+      gameDisplayRendererRef.current.animatePosition('RUNNING')
+    }, 2000)
+    setTimeout(() => {
+      gameDisplayRendererRef.current.characterScore =
+        gameDisplayRendererRef.current.characterScore.map(() =>
+          Math.floor(Math.random() * 300)
+        )
+      gameDisplayRendererRef.current.animatePosition('RUNNING')
+    }, 4000)
+    setTimeout(() => {
+      gameDisplayRendererRef.current.animatePosition('END')
+    }, 8000)
     return renderManagerRef.current.stop
   }, [])
 

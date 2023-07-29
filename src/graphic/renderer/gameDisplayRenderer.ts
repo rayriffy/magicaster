@@ -3,12 +3,15 @@ import { getAssets } from '../assets'
 import { CharacterColor, Renderer } from './types'
 import TrackRenderer from './trackRenderer'
 import CharacterGroupRenderer from './characterGroupRenderer'
-import { Params as CharacterGroupRendererParams } from './characterGroupRenderer'
+
+export type PositioningMode = 'PREPARE' | 'RUNNING' | 'END'
 
 type Params = {
   width: number
   characterColor: CharacterColor[]
+  forcusedCharacterIndex: number
 }
+
 class GameDisplayRenderer implements Renderer {
   private app: PIXI.Application<HTMLCanvasElement>
   private width: number
@@ -16,15 +19,21 @@ class GameDisplayRenderer implements Renderer {
 
   private trackRenderer: TrackRenderer
   private characterGroupRenderer: CharacterGroupRenderer
+  public characterScore: number[]
+  public characterScoreDistanceRatio: number = 1
+  private forcusedCharacterIndex: number
 
-  constructor({ width, characterColor }: Params) {
+  constructor({ width, characterColor, forcusedCharacterIndex }: Params) {
     const assets = getAssets()
     if (assets === null) throw "assets aren't load yet"
+
     this.app = new PIXI.Application({ backgroundAlpha: 0 })
     this.width = width
     this.height = 0.6 * width
+    this.forcusedCharacterIndex = forcusedCharacterIndex
     this.app.view.width = this.width
     this.app.view.height = this.height
+    this.characterScore = Array(characterColor.length).fill(0)
 
     // set up track
     this.trackRenderer = new TrackRenderer({ width })
@@ -45,6 +54,28 @@ class GameDisplayRenderer implements Renderer {
 
     for (const characterRenderer of this.characterGroupRenderer.getCharacterRendererList()) {
       this.app.stage.addChild(characterRenderer.getSprite())
+    }
+  }
+
+  animatePosition = (mode: PositioningMode) => {
+    if (mode === 'PREPARE') {
+      this.characterGroupRenderer.allAnimateTo({ x: this.width / 10 })
+    }
+
+    if (mode === 'RUNNING') {
+      this.characterGroupRenderer.allAnimateToWithXPortions(
+        this.characterScore.map(
+          value => value * this.characterScoreDistanceRatio
+        ),
+        this.forcusedCharacterIndex,
+        this.width / 2
+      )
+    }
+
+    if (mode === 'END') {
+      this.characterGroupRenderer.allAnimateTo({
+        x: this.width + this.characterGroupRenderer.getCharacterSize() * 2,
+      })
     }
   }
 

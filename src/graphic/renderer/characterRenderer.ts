@@ -83,7 +83,7 @@ class CharacterRenderer implements Renderer {
   private size: number
   private originPosition: Vec2 = [0, 0]
   private targetPosition: Vec2 = [0, 0]
-  speed: number = 100
+  speed: number = 10
 
   constructor({
     primaryColor,
@@ -123,12 +123,6 @@ class CharacterRenderer implements Renderer {
 
     const originPositionVec = new Victor(...this.originPosition)
     const targetPositionVec = new Victor(...this.targetPosition)
-    // console.log(
-    //   'DEBUG: origin=',
-    //   this.originPosition,
-    //   ', target=',
-    //   this.targetPosition
-    // )
 
     if (
       originPositionVec.distance(targetPositionVec) <= distanceToNextPosition
@@ -149,16 +143,16 @@ class CharacterRenderer implements Renderer {
     this.sprite.position.x = this.originPosition[0]
   }
 
-  goTo = (x: number, y: number) => {
-    this.originPosition[0] = x
-    this.originPosition[1] = y
-    this.targetPosition[0] = x
-    this.targetPosition[1] = y
+  goTo = (position: { x?: number; y?: number }) => {
+    this.originPosition[0] = position.x ?? this.originPosition[0]
+    this.originPosition[1] = position.y ?? this.originPosition[1]
+    this.targetPosition[0] = position.x ?? this.originPosition[0]
+    this.targetPosition[1] = position.y ?? this.originPosition[1]
   }
 
-  animateTo = (x: number, y: number) => {
-    this.targetPosition[0] = x
-    this.targetPosition[1] = y
+  animateTo = (position: { x?: number; y?: number }) => {
+    this.targetPosition[0] = position.x ?? this.originPosition[0]
+    this.targetPosition[1] = position.y ?? this.originPosition[1]
   }
 
   getSprite = (): PIXI.Sprite => {
