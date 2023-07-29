@@ -13,7 +13,8 @@ export type characterSelections = { [playerID: string]: number }
 export type Options = {
   playerID: string
   characterSelections: characterSelections
-  onSubmit: (characterSelections: characterSelections) => void
+  onSelect?: (index: number) => void
+  onSubmit?: () => void
 }
 export type Props = {
   options: Options
@@ -41,9 +42,8 @@ const Arranger = styled.div`
 `
 
 const ChooseCharacterGUI: React.FC<Props> = ({ renderManager, options }) => {
-  const [characterIndex, setCharacterIndex] = useState<number>(
-    options.characterSelections[options.playerID] ?? 0
-  )
+  const characterIndex = options.characterSelections[options.playerID] ?? 0
+
   return (
     <Container>
       <Arranger>
@@ -60,19 +60,34 @@ const ChooseCharacterGUI: React.FC<Props> = ({ renderManager, options }) => {
             {Array(CHARACTER_NUMBER)
               .fill(1)
               .map((_, index) => {
+                const isSelected = Object.values(
+                  options.characterSelections
+                ).includes(index)
+
+                const isMySelect = index === characterIndex
                 return (
                   <CharacterDisplayer
                     size="55px"
                     key={index}
                     renderManager={renderManager}
                     characterIndex={index}
-                    onClick={() => setCharacterIndex(index)}
+                    disabled={isSelected && !isMySelect}
+                    onClick={() => {
+                      if (isSelected) return
+                      if (options.onSelect) options.onSelect(index)
+                    }}
+                    style={{
+                      borderStyle: 'solid',
+                      borderWidth: (isMySelect ? 4 : 0) + 'px',
+                      borderColor: '#724FD9',
+                      transition: '0.3s',
+                    }}
                   />
                 )
               })}
           </CharacterDisplayersContainer>
         </div>
-        <Button style={{ margin: '30px 0px' }}>
+        <Button style={{ margin: '30px 0px' }} onClick={options.onSubmit}>
           <Title>Join the room</Title>
         </Button>
       </Arranger>

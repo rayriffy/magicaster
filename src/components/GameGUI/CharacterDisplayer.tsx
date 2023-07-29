@@ -8,6 +8,8 @@ type Props = {
   size: string
   characterIndex: number
   onClick?: () => void
+  style?: React.CSSProperties
+  disabled?: boolean
 }
 
 const Container = styled.div<{ size: string }>`
@@ -23,6 +25,8 @@ const CharacterDisplayer: React.FC<Props> = ({
   size,
   characterIndex,
   onClick,
+  style,
+  disabled,
 }) => {
   const ref = useRef<HTMLDivElement | null>(null)
   const characterDisplayRendererRef = useRef<CharacterDisplayRenderer | null>(
@@ -38,6 +42,11 @@ const CharacterDisplayer: React.FC<Props> = ({
   }, [characterIndex])
 
   useEffect(() => {
+    if (characterDisplayRendererRef.current === null) return
+    characterDisplayRendererRef.current.isDisable = disabled ?? false
+  }, [disabled])
+
+  useEffect(() => {
     if (ref.current === null) return
     const characterColor = CHARACTER_COLOR_LIST[characterIndex]
     const characterDisplayRenderer = new CharacterDisplayRenderer({
@@ -45,6 +54,7 @@ const CharacterDisplayer: React.FC<Props> = ({
       background: '#fff',
       primaryColor: characterColor.primary,
       secondaryColor: characterColor.secondary,
+      isDisable: disabled,
     })
     characterDisplayRendererRef.current = characterDisplayRenderer
     renderManager.addRenderer(characterDisplayRenderer)
@@ -55,7 +65,14 @@ const CharacterDisplayer: React.FC<Props> = ({
       renderManager.removeRenderer(characterDisplayRenderer)
     }
   }, [])
-  return <Container ref={ref} size={size} onClick={onClick}></Container>
+  return (
+    <Container
+      ref={ref}
+      size={size}
+      onClick={onClick}
+      style={style}
+    ></Container>
+  )
 }
 
 export default CharacterDisplayer

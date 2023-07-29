@@ -7,6 +7,7 @@ type Uniforms = {
   uSecondaryColor: Vec3
   uDefaultPrimaryColor: Vec3
   uDefaultSecondaryColor: Vec3
+  uIsDisable: boolean
 }
 
 const DEFAULT_PRIMARY_COLOR: Vec3 = [4, 0, 103]
@@ -20,6 +21,7 @@ uniform vec3 uPrimaryColor;
 uniform vec3 uSecondaryColor;
 uniform vec3 uDefaultPrimaryColor;
 uniform vec3 uDefaultSecondaryColor;
+uniform bool uIsDisable;
 
 bool isMatch(vec3 color1, vec3 color2, float threshold){
   if(abs(color1.r - color2.r) > threshold) return false;
@@ -30,6 +32,11 @@ bool isMatch(vec3 color1, vec3 color2, float threshold){
 
 void main(void) {
   vec4 textureColor = texture2D(uSampler, vTextureCoord);
+  
+  if(uIsDisable){
+    gl_FragColor = vec4(vec3(textureColor.x + textureColor.y + textureColor.z) / 3.,textureColor.w);
+    return;
+  }
 
   if(textureColor.w == 0.){
     gl_FragColor = textureColor;
@@ -61,6 +68,7 @@ type Parameter = {
   background?: string
   primaryColor?: Vec3
   secondaryColor?: Vec3
+  isDisable?: boolean
 }
 
 class CharacterDisplayRenderer implements Renderer {
@@ -71,14 +79,22 @@ class CharacterDisplayRenderer implements Renderer {
   private parent: HTMLElement
   private shaderUniforms: Uniforms
 
-  constructor({ parent, background, primaryColor, secondaryColor }: Parameter) {
+  constructor({
+    parent,
+    background,
+    primaryColor,
+    secondaryColor,
+    isDisable,
+  }: Parameter) {
     const assets = getAssets()
     if (assets === null) throw "assets aren't load yet"
+
     this.shaderUniforms = {
       uDefaultPrimaryColor: DEFAULT_PRIMARY_COLOR,
       uDefaultSecondaryColor: DEFAULT_SECONDARY_COLOR,
       uPrimaryColor: primaryColor ?? DEFAULT_PRIMARY_COLOR,
       uSecondaryColor: secondaryColor ?? DEFAULT_SECONDARY_COLOR,
+      uIsDisable: isDisable ?? false,
     }
     this.parent = parent
     this.size = parent.getBoundingClientRect().width
@@ -111,6 +127,14 @@ class CharacterDisplayRenderer implements Renderer {
 
   get secondaryColor(): Vec3 {
     return this.shaderUniforms.uSecondaryColor
+  }
+
+  set isDisable(disabled: boolean) {
+    this.shaderUniforms.uIsDisable = disabled
+  }
+
+  get isDisable(): boolean {
+    return this.shaderUniforms.uIsDisable
   }
 
   loop = () => {

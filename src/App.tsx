@@ -11,7 +11,7 @@ function App() {
 
   const [characterSelections, setCharacterSelections] = useState<{
     [playerID: string]: number
-  }>({ test: 0 })
+  }>({ test: 0, test2: 1 })
 
   useEffect(() => {
     Rune.initClient({
@@ -35,8 +35,8 @@ function App() {
       options={{
         playerID: 'test',
         characterSelections: characterSelections,
-        onSubmit: characterSelections => {
-          setCharacterSelections(characterSelections)
+        onSelect: index => {
+          setCharacterSelections({ ...characterSelections, test: index })
         },
       }}
     />
