@@ -12,13 +12,13 @@ const Container = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: max-content 1fr;
-  padding: 15px 20px;
+  padding: 10px 20px;
   background-color: #845bfa;
   border-radius: 10px;
   gap: 15px;
 `
 
-const AVATAR_SIZE = 75
+const AVATAR_SIZE = 70
 
 const Avatar = styled.div<{ url: string }>`
   width: ${AVATAR_SIZE}px;

@@ -4,7 +4,8 @@ import Title from '../Title'
 import Button from '../Button'
 
 import styled from 'styled-components'
-import PlayerBoardRow, { Props as PlayerBoardRowProps } from '../PlayerBoardRow'
+import PlayerBoardRow from '../PlayerBoardRow'
+import Paragraph from '../Paragraph'
 
 export type MODE = 'LOBBY_GUI'
 
@@ -18,6 +19,8 @@ export type PlayerLobbyInfo = {
 export type Options = {
   playerID: string
   playerLobbyInfos: PlayerLobbyInfo[]
+  onReady?: () => void
+  onCancel?: () => void
 }
 
 export type Props = {
@@ -28,7 +31,7 @@ const Arranger = styled.div`
   width: 100%;
   height: 100%;
   display: grid;
-  /* grid-template-rows: max-content max-content max-content 1fr; */
+  grid-template-rows: max-content 1fr max-content;
   gap: 10px;
 `
 
@@ -37,19 +40,51 @@ const PlayerBoardContainer = styled.div`
   gap: 20px;
 `
 
+const StatusCapsule = styled.div<{ backgroundColor: string }>`
+  width: 100px;
+  height: 30px;
+  border-radius: 50px;
+  background-color: ${({ backgroundColor }) => backgroundColor};
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
 const LobbyGUI: React.FC<Props> = ({ options }) => {
+  let isReady = false
+  for (const info of options.playerLobbyInfos) {
+    if (info.isReady && options.playerID === info.playerID) isReady = true
+  }
   return (
-    <Container>
+    <Container style={{ minHeight: '100%' }}>
       <Arranger>
         <Title style={{ marginTop: '30px', marginBottom: '20px' }}>Lobby</Title>
         <PlayerBoardContainer>
           {options.playerLobbyInfos.map(info => {
-            return <PlayerBoardRow key={info.playerID} {...info} />
+            return (
+              <PlayerBoardRow key={info.playerID} {...info}>
+                <StatusCapsule
+                  backgroundColor={info.isReady ? '#51D94F' : '#D94F4F'}
+                >
+                  {info.isReady ? 'Ready' : 'Cancel'}
+                </StatusCapsule>
+              </PlayerBoardRow>
+            )
           })}
         </PlayerBoardContainer>
-        <Button style={{ margin: '30px 0px' }}>
-          <Title>Ready</Title>
-        </Button>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <Button
+            style={{ margin: '30px 0px' }}
+            color={isReady ? 'primary' : 'danger'}
+            onClick={() => {
+              if (isReady && options.onCancel) options.onCancel()
+              if (!isReady && options.onReady) options.onReady()
+            }}
+          >
+            <Paragraph>{isReady ? 'Ready' : 'Not ready'}</Paragraph>
+          </Button>
+        </div>
       </Arranger>
     </Container>
   )

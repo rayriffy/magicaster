@@ -7,6 +7,7 @@ import Button from '../Button'
 
 import styled from 'styled-components'
 import { CHARACTER_NUMBER } from './const'
+import Paragraph from '../Paragraph'
 
 export type MODE = 'CHOOSE_CHARACTER_GUI'
 export type characterSelections = { [playerID: string]: number }
@@ -77,9 +78,11 @@ const ChooseCharacterGUI: React.FC<Props> = ({ renderManager, options }) => {
               )
             })}
         </CharacterDisplayersContainer>
-        <Button style={{ margin: '30px 0px' }} onClick={options.onSubmit}>
-          <Title>Join the room</Title>
-        </Button>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <Button style={{ margin: '30px 0px' }} onClick={options.onSubmit}>
+            <Paragraph>Join the room</Paragraph>
+          </Button>
+        </div>
       </Arranger>
     </Container>
   )
