@@ -3,6 +3,7 @@ import { getAssets } from '../assets'
 import { CharacterColor, Renderer } from './types'
 import TrackRenderer from './trackRenderer'
 import CharacterGroupRenderer from './characterGroupRenderer'
+import EffectQueueRenderer from './effectQueueRenderer'
 
 export type PositioningMode = 'PREPARE' | 'RUNNING' | 'END'
 
@@ -19,6 +20,7 @@ class GameDisplayRenderer implements Renderer {
 
   private trackRenderer: TrackRenderer
   private characterGroupRenderer: CharacterGroupRenderer
+  private effectQueueRenderer: EffectQueueRenderer
   public characterScore: number[]
   public characterScoreDistanceRatio: number = 1
   private forcusedCharacterIndex: number
@@ -34,6 +36,7 @@ class GameDisplayRenderer implements Renderer {
     this.app.view.width = this.width
     this.app.view.height = this.height
     this.characterScore = Array(characterColor.length).fill(0)
+    this.effectQueueRenderer = new EffectQueueRenderer(this.app.stage)
 
     // set up track
     this.trackRenderer = new TrackRenderer({ width })
@@ -77,6 +80,10 @@ class GameDisplayRenderer implements Renderer {
         x: this.width + this.characterGroupRenderer.getCharacterSize() * 2,
       })
     }
+  }
+
+  getEffectQueueRenderer = (): EffectQueueRenderer => {
+    return this.effectQueueRenderer
   }
 
   loop = (delta: number) => {

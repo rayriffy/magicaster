@@ -7,16 +7,22 @@ import {
   bundle as trackBundle,
   getSpritesheet as getTrackSpritesheet,
 } from './track'
+import {
+  bundle as effectBundle,
+  getEffectSpritesheets,
+  EffectSpritesheets,
+} from './effect'
 
 type Assets = {
   wizard: { spritesheet: PIXI.Spritesheet }
   track: { spritesheet: PIXI.Spritesheet }
+  effects: EffectSpritesheets
 }
 
 let assets: Assets | null = null
 
 export const load = async () => {
-  let bundles: PIXI.ResolverBundle[] = [wizardBundle, trackBundle]
+  let bundles: PIXI.ResolverBundle[] = [wizardBundle, trackBundle, effectBundle]
 
   await PIXI.Assets.init({
     manifest: {
@@ -30,10 +36,12 @@ export const load = async () => {
 
   const wizardSpritesheet = await getWizardSpritesheet()
   const trackSpritesheet = await getTrackSpritesheet()
+  const effectSpritesheets = await getEffectSpritesheets()
 
   assets = {
     wizard: { spritesheet: wizardSpritesheet },
     track: { spritesheet: trackSpritesheet },
+    effects: effectSpritesheets,
   }
 }
 

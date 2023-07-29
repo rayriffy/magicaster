@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js'
 export interface Renderer {
   loop(delta: number): void
 }
@@ -15,4 +16,11 @@ export type Area = {
   height: number
   startPoint: number
   endPoint: number
+}
+
+export interface DisplayObjectSpace<
+  T extends PIXI.DisplayObject = PIXI.DisplayObject,
+> {
+  addChild<U extends T[]>(...children: U): U[0]
+  removeChild<U extends T[]>(...children: U): U[0]
 }
