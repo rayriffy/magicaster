@@ -60,6 +60,10 @@ class CharacterDisplayRenderer implements Renderer {
   destroy = () => {
     this.app.destroy()
   }
+
+  getCharacterRenderer = (): CharacterRenderer => {
+    return this.characterRenderer
+  }
 }
 
 export default CharacterDisplayRenderer

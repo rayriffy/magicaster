@@ -35,14 +35,16 @@ const CharacterDisplayer: React.FC<Props> = ({
   useEffect(() => {
     if (characterDisplayRendererRef.current === null) return
     const characterColor = CHARACTER_COLOR_LIST[characterIndex]
-    characterDisplayRendererRef.current.primaryColor = characterColor.primary
-    characterDisplayRendererRef.current.secondaryColor =
+    characterDisplayRendererRef.current.getCharacterRenderer().primaryColor =
+      characterColor.primary
+    characterDisplayRendererRef.current.getCharacterRenderer().secondaryColor =
       characterColor.secondary
   }, [characterIndex])
 
   useEffect(() => {
     if (characterDisplayRendererRef.current === null) return
-    characterDisplayRendererRef.current.isDisable = disabled ?? false
+    characterDisplayRendererRef.current.getCharacterRenderer().isDisable =
+      disabled ?? false
   }, [disabled])
 
   useEffect(() => {

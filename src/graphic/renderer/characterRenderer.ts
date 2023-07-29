@@ -3,7 +3,7 @@ import { getAssets } from '../assets'
 import { Renderer, Vec3, Vec2 } from './types'
 import Victor from 'victor'
 
-type s = {
+type Uniforms = {
   uPrimaryColor: Vec3
   uSecondaryColor: Vec3
   uDefaultPrimaryColor: Vec3
@@ -60,7 +60,7 @@ void main(void) {
 }
 `
 
-function getColorFilter(unifroms: s): PIXI.Filter {
+function getColorFilter(unifroms: Uniforms): PIXI.Filter {
   return new PIXI.Filter(undefined, colorFragmentShader, unifroms)
 }
 
@@ -76,7 +76,7 @@ class CharacterRenderer implements Renderer {
   private sprite: PIXI.Sprite
   public speedPerRound: number = 1000
   private randomValue: number = Math.random()
-  private s: s
+  private uniforms: Uniforms
   private size: number
   private originPosition: Vec2 = [0, 0]
   private targetPosition: Vec2 = [0, 0]
@@ -96,7 +96,7 @@ class CharacterRenderer implements Renderer {
     this.originPosition = [...originPosition]
     this.targetPosition = [...originPosition]
 
-    this.s = {
+    this.uniforms = {
       uDefaultPrimaryColor: DEFAULT_PRIMARY_COLOR,
       uDefaultSecondaryColor: DEFAULT_SECONDARY_COLOR,
       uPrimaryColor: primaryColor ?? DEFAULT_PRIMARY_COLOR,
@@ -107,7 +107,7 @@ class CharacterRenderer implements Renderer {
     this.sprite = new PIXI.Sprite(
       assets.wizard.spritesheet.textures['idleWizard']
     )
-    this.sprite.filters = [getColorFilter(this.s)]
+    this.sprite.filters = [getColorFilter(this.uniforms)]
     const scale = (this.size * 0.7) / this.sprite.width
     this.sprite.scale.set(scale, scale)
     this.sprite.anchor.set(0.5, 0.55)
@@ -153,6 +153,30 @@ class CharacterRenderer implements Renderer {
 
   getSprite = (): PIXI.Sprite => {
     return this.sprite
+  }
+
+  get primaryColor(): Vec3 {
+    return this.uniforms.uPrimaryColor
+  }
+
+  get secondaryColor(): Vec3 {
+    return this.uniforms.uSecondaryColor
+  }
+
+  get isDisable(): boolean {
+    return this.uniforms.uIsDisable
+  }
+
+  set primaryColor(color: Vec3) {
+    this.uniforms.uPrimaryColor = [...color]
+  }
+
+  set secondaryColor(color: Vec3) {
+    this.uniforms.uSecondaryColor = [...color]
+  }
+
+  set isDisable(value: boolean) {
+    this.uniforms.uIsDisable = value
   }
 }
 
