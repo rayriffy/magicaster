@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Container from '../Container'
 import Title from '../Title'
 import CharacterDisplayer from './CharacterDisplayer'

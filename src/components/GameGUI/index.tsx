@@ -1,15 +1,23 @@
 import React, { useEffect, useRef } from 'react'
 import ChooseCharacterGUI, {
   MODE as ChooseCharacterGUIMode,
-  // Props as ChooseCharacterGUIProps,
-  Options,
+  Options as ChooseCharacterGUIOptions,
 } from './ChooseCharacterGUI'
+import LobbyGUI, {
+  MODE as LobbyGUIMode,
+  Options as LobbyGUIOptions,
+} from './LobbyGUI'
 import { RenderManager } from '../../graphic/renderer'
 
-type GameGUIProps = {
-  mode: ChooseCharacterGUIMode
-  options: Options
-}
+type GameGUIProps =
+  | {
+      mode: ChooseCharacterGUIMode
+      options: ChooseCharacterGUIOptions
+    }
+  | {
+      mode: LobbyGUIMode
+      options: LobbyGUIOptions
+    }
 
 const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
   const renderManagerRef = useRef<RenderManager>(new RenderManager())
@@ -26,6 +34,10 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
         options={options}
       />
     )
+  }
+
+  if (mode === 'LOBBY_GUI') {
+    return <LobbyGUI options={options} />
   }
   return null
 }
