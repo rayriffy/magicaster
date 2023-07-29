@@ -16,6 +16,7 @@ import WordOrderingGUI, {
 } from './WordOrderingGUI'
 
 import { GameDisplayRenderer, RenderManager } from '../../graphic/renderer'
+import { CHARACTER_COLOR_LIST } from './const'
 
 type GameGUIProps =
   | {
@@ -36,6 +37,7 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
   const gameDisplayRendererRef = useRef<GameDisplayRenderer>(
     new GameDisplayRenderer({
       width: window.innerWidth,
+      characterColor: CHARACTER_COLOR_LIST.slice(0, 4),
     })
   )
 

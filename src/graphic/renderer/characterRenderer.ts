@@ -3,6 +3,12 @@ import { getAssets } from '../assets'
 import { Renderer, Vec3, Vec2 } from './types'
 import Victor from 'victor'
 
+export type CharacterAppearanceSetting = {
+  primaryColor?: Vec3
+  secondaryColor?: Vec3
+  isDisable?: boolean
+}
+
 type Uniforms = {
   uPrimaryColor: Vec3
   uSecondaryColor: Vec3
@@ -64,10 +70,7 @@ function getColorFilter(unifroms: Uniforms): PIXI.Filter {
   return new PIXI.Filter(undefined, colorFragmentShader, unifroms)
 }
 
-type Params = {
-  primaryColor?: Vec3
-  secondaryColor?: Vec3
-  isDisable?: boolean
+type Params = CharacterAppearanceSetting & {
   size: number
   originPosition: Vec2
 }
@@ -111,6 +114,7 @@ class CharacterRenderer implements Renderer {
     const scale = (this.size * 0.7) / this.sprite.width
     this.sprite.scale.set(scale, scale)
     this.sprite.anchor.set(0.5, 0.55)
+
     this.sprite.position.set(...this.originPosition)
   }
 
@@ -119,18 +123,24 @@ class CharacterRenderer implements Renderer {
 
     const originPositionVec = new Victor(...this.originPosition)
     const targetPositionVec = new Victor(...this.targetPosition)
+    // console.log(
+    //   'DEBUG: origin=',
+    //   this.originPosition,
+    //   ', target=',
+    //   this.targetPosition
+    // )
 
     if (
       originPositionVec.distance(targetPositionVec) <= distanceToNextPosition
     ) {
       this.originPosition[0] = this.targetPosition[0]
-      this.originPosition[1] = this.targetPosition[0]
+      this.originPosition[1] = this.targetPosition[1]
     } else {
       const directionVec = targetPositionVec
         .subtract(originPositionVec)
         .normalize()
-      this.originPosition[0] = directionVec.x * distanceToNextPosition
-      this.originPosition[1] = directionVec.x * distanceToNextPosition
+      this.originPosition[0] += directionVec.x * distanceToNextPosition
+      this.originPosition[1] += directionVec.y * distanceToNextPosition
     }
 
     this.sprite.position.y =

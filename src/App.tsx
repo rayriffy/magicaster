@@ -9,9 +9,9 @@ function App() {
   const [loadingAssets, setLoadingAssets] = useState<boolean>(true)
 
   // DEBUG: CHOOSE_CHARACTER_GUI
-  const [characterSelections, setCharacterSelections] = useState<{
-    [playerID: string]: number
-  }>({ test: 0, test2: 1 })
+  // const [characterSelections, setCharacterSelections] = useState<{
+  //   [playerID: string]: number
+  // }>({ test: 0, test2: 1 })
 
   // DEBUG: CHOOSE_CHARACTER_GUI
   // const [lobbyInfo, setLobbyInfo] = useState<PlayerLobbyInfo[]>([
@@ -62,21 +62,21 @@ function App() {
   }
 
   // DEBUG: CHOOSE_CHARACTER_GUI
-  return (
-    <GameGUI
-      mode="CHOOSE_CHARACTER_GUI"
-      options={{
-        playerID: 'test',
-        characterSelections: characterSelections,
-        onSelect: index => {
-          setCharacterSelections({ ...characterSelections, test: index })
-        },
-        onSubmit: () => {
-          console.log(characterSelections)
-        },
-      }}
-    />
-  )
+  // return (
+  //   <GameGUI
+  //     mode="CHOOSE_CHARACTER_GUI"
+  //     options={{
+  //       playerID: 'test',
+  //       characterSelections: characterSelections,
+  //       onSelect: index => {
+  //         setCharacterSelections({ ...characterSelections, test: index })
+  //       },
+  //       onSubmit: () => {
+  //         console.log(characterSelections)
+  //       },
+  //     }}
+  //   />
+  // )
 
   // DEBUG: LOBBY_GUI
   // return (
@@ -104,7 +104,7 @@ function App() {
   // )
 
   // BEBUG: WOR
-  // return <GameGUI mode="WORD_ORDERING" options={{}} />
+  return <GameGUI mode="WORD_ORDERING" options={{}} />
 }
 
 export default App
