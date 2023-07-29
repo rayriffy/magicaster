@@ -30,9 +30,6 @@ export class RenderManager {
 
   addRenderer = (renderer: Renderer) => {
     if (this.renderers.includes(renderer)) return
-
-    console.log(renderer)
-
     this.renderers.push(renderer)
   }
 

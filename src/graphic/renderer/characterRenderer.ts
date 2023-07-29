@@ -15,50 +15,50 @@ const DEFAULT_PRIMARY_COLOR: Vec3 = [4, 0, 103]
 const DEFAULT_SECONDARY_COLOR: Vec3 = [0, 59, 122]
 
 const colorFragmentShader = `
-  varying vec2 vTextureCoord;
-   sampler2D uSampler;
-  
-   vec3 uPrimaryColor;
-   vec3 uSecondaryColor;
-   vec3 uDefaultPrimaryColor;
-   vec3 uDefaultSecondaryColor;
-   bool uIsDisable;
-  
-  bool isMatch(vec3 color1, vec3 color2, float threshold){
-    if(abs(color1.r - color2.r) > threshold) return false;
-    if(abs(color1.g - color2.g) > threshold) return false; 
-    if(abs(color1.b - color2.b) > threshold) return false;
-    return true;
+varying vec2 vTextureCoord;
+uniform sampler2D uSampler;
+
+uniform vec3 uPrimaryColor;
+uniform vec3 uSecondaryColor;
+uniform vec3 uDefaultPrimaryColor;
+uniform vec3 uDefaultSecondaryColor;
+uniform bool uIsDisable;
+
+bool isMatch(vec3 color1, vec3 color2, float threshold){
+  if(abs(color1.r - color2.r) > threshold) return false;
+  if(abs(color1.g - color2.g) > threshold) return false; 
+  if(abs(color1.b - color2.b) > threshold) return false;
+  return true;
+}
+
+void main(void) {
+  vec4 textureColor = texture2D(uSampler, vTextureCoord);
+
+  if(uIsDisable){
+    gl_FragColor = vec4(vec3(textureColor.x + textureColor.y + textureColor.z) / 3.,textureColor.w);
+    return;
   }
-  
-  void main(void) {
-    vec4 textureColor = texture2D(uSampler, vTextureCoord);
-  
-    if(uIsDisable){
-      gl_FragColor = vec4(vec3(textureColor.x + textureColor.y + textureColor.z) / 3.,textureColor.w);
-      return;
-    }
-  
-    if(textureColor.w == 0.){
-      gl_FragColor = textureColor;
-      return;
-    }
-  
-    bool isPrimaryColor = isMatch(uDefaultPrimaryColor, textureColor.rgb * 256., 2.);
-    if(isPrimaryColor){
-      gl_FragColor = vec4(uPrimaryColor / 256., 1);
-      return;
-    }
-  
-    bool isSecondaryColor = isMatch(uDefaultSecondaryColor, textureColor.rgb * 256., 2.);
-    if(isSecondaryColor){
-      gl_FragColor = vec4(uSecondaryColor / 256., 1);
-      return;
-    }
-  
+
+  if(textureColor.w == 0.){
     gl_FragColor = textureColor;
+    return;
   }
-  `
+
+  bool isPrimaryColor = isMatch(uDefaultPrimaryColor, textureColor.rgb * 256., 2.);
+  if(isPrimaryColor){
+    gl_FragColor = vec4(uPrimaryColor / 256., 1);
+    return;
+  }
+
+  bool isSecondaryColor = isMatch(uDefaultSecondaryColor, textureColor.rgb * 256., 2.);
+  if(isSecondaryColor){
+    gl_FragColor = vec4(uSecondaryColor / 256., 1);
+    return;
+  }
+
+  gl_FragColor = textureColor;
+}
+`
 
 function getColorFilter(unifroms: s): PIXI.Filter {
   return new PIXI.Filter(undefined, colorFragmentShader, unifroms)
@@ -82,11 +82,19 @@ class CharacterRenderer implements Renderer {
   private targetPosition: Vec2 = [0, 0]
   speed: number = 100
 
-  constructor({ primaryColor, secondaryColor, isDisable, size }: Params) {
+  constructor({
+    primaryColor,
+    secondaryColor,
+    isDisable,
+    size,
+    originPosition,
+  }: Params) {
     const assets = getAssets()
     if (assets === null) throw "assets aren't load yet"
 
     this.size = size
+    this.originPosition = [...originPosition]
+    this.targetPosition = [...originPosition]
 
     this.s = {
       uDefaultPrimaryColor: DEFAULT_PRIMARY_COLOR,
