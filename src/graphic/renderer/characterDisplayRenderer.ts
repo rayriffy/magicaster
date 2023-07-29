@@ -32,7 +32,7 @@ bool isMatch(vec3 color1, vec3 color2, float threshold){
 
 void main(void) {
   vec4 textureColor = texture2D(uSampler, vTextureCoord);
-  
+
   if(uIsDisable){
     gl_FragColor = vec4(vec3(textureColor.x + textureColor.y + textureColor.z) / 3.,textureColor.w);
     return;
@@ -99,7 +99,9 @@ class CharacterDisplayRenderer implements Renderer {
     this.parent = parent
     this.size = parent.getBoundingClientRect().width
     this.app = new PIXI.Application({ background: background ?? 'black' })
-    this.app.resizeTo = this.parent
+    // this.app.resizeTo = this.parent
+    this.app.view.width = this.size
+    this.app.view.height = this.size
 
     this.characterSprite = new PIXI.Sprite(
       assets.wizard.spritesheet.textures['idleWizard']
@@ -143,6 +145,11 @@ class CharacterDisplayRenderer implements Renderer {
       Math.sin(Date.now() / 500 + this.randomValue * 500) * this.size * 0.05 +
       this.size / 2
   }
+
+  updateSizeToParent = () => {
+    this.app.resizeTo = this.parent
+  }
+
   getCanvas = () => {
     return this.app.view
   }

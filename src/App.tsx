@@ -38,6 +38,9 @@ function App() {
         onSelect: index => {
           setCharacterSelections({ ...characterSelections, test: index })
         },
+        onSubmit: () => {
+          console.log(characterSelections)
+        },
       }}
     />
   )

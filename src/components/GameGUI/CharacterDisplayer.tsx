@@ -5,28 +5,27 @@ import { CHARACTER_COLOR_LIST } from './const'
 
 type Props = {
   renderManager: RenderManager
-  size: string
   characterIndex: number
   onClick?: () => void
-  style?: React.CSSProperties
   disabled?: boolean
+  isHighLight?: boolean
 }
 
-const Container = styled.div<{ size: string }>`
-  height: ${({ size }) => size};
-  width: ${({ size }) => size};
-  background-color: red;
-  overflow: hidden;
-  border-radius: 5px;
+const Container = styled.div<{ isHighLight: boolean }>`
+  width: 100%;
+  > canvas {
+    border-radius: 5px;
+    outline: ${({ isHighLight }) => (isHighLight ? 4 : 0)}px solid #724fd9;
+    transition: 0.3s;
+  }
 `
 
 const CharacterDisplayer: React.FC<Props> = ({
   renderManager,
-  size,
   characterIndex,
   onClick,
-  style,
   disabled,
+  isHighLight,
 }) => {
   const ref = useRef<HTMLDivElement | null>(null)
   const characterDisplayRendererRef = useRef<CharacterDisplayRenderer | null>(
@@ -68,9 +67,8 @@ const CharacterDisplayer: React.FC<Props> = ({
   return (
     <Container
       ref={ref}
-      size={size}
       onClick={onClick}
-      style={style}
+      isHighLight={isHighLight ?? false}
     ></Container>
   )
 }
