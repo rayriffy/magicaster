@@ -1,5 +1,5 @@
 {
-  "name": "spell-calamiry",
+  "name": "magicaster",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,7 +12,7 @@
     "format": "prettier --write ./src"
   },
   "repository": {
-    "url": "https://github.com/rayriffy/reactjam2023"
+    "url": "https://github.com/rayriffy/magicaster"
   },
   "dependencies": {
     "@nanostores/react": "^0.7.1",
