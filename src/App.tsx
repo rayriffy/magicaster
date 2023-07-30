@@ -51,6 +51,12 @@ function App() {
                 avatar ?? 0,
               ])
             ),
+            playerScore: Object.fromEntries(
+              Object.entries(game.players).map(([playerID, { stat }]) => [
+                playerID,
+                stat.score,
+              ])
+            ),
             currentPlayerID: playerId,
             playerID: playerId,
             playerLobbyInfos: Object.entries(game.players)
@@ -76,6 +82,12 @@ function App() {
                 avatar ?? 0,
               ])
             ),
+            playerScore: Object.fromEntries(
+              Object.entries(game.players).map(([playerID, { stat }]) => [
+                playerID,
+                stat.score,
+              ])
+            ),
             currentPlayerID: playerId,
             playerID: playerId,
             playerLobbyInfos: Object.entries(game.players)
@@ -99,6 +111,12 @@ function App() {
               Object.entries(game.players).map(([playerID, { avatar }]) => [
                 playerID,
                 avatar ?? 0,
+              ])
+            ),
+            playerScore: Object.fromEntries(
+              Object.entries(game.players).map(([playerID, { stat }]) => [
+                playerID,
+                stat.score,
               ])
             ),
             currentPlayerID: playerId,
@@ -129,6 +147,12 @@ function App() {
                 avatar ?? 0,
               ])
             ),
+            playerScore: Object.fromEntries(
+              Object.entries(game.players).map(([playerID, { stat }]) => [
+                playerID,
+                stat.score,
+              ])
+            ),
             currentPlayerID: playerId,
             deadline: game.phaseEndAt,
             score: player!.stat.score,
@@ -155,6 +179,12 @@ function App() {
               Object.entries(game.players).map(([playerID, { avatar }]) => [
                 playerID,
                 avatar ?? 0,
+              ])
+            ),
+            playerScore: Object.fromEntries(
+              Object.entries(game.players).map(([playerID, { stat }]) => [
+                playerID,
+                stat.score,
               ])
             ),
             currentPlayerID: playerId,

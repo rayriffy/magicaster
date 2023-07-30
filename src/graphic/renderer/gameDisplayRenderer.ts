@@ -22,7 +22,7 @@ class GameDisplayRenderer implements Renderer {
   private characterGroupRenderer: CharacterGroupRenderer
   private effectQueueRenderer: EffectQueueRenderer
   public characterScore: { [id: string]: number }
-  public characterScoreDistanceRatio: number = 1
+  public characterScoreDistanceRatio: number = 3
   private forcusedCharacterID: string
 
   constructor({ width, characterColor, forcusedCharacterID }: Params) {
