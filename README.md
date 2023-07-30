@@ -1,4 +1,4 @@
-# Harry Potter™ and the forbidden Spell
+# ~~Harry Potter™ and the forbidden Spell~~ Magicaster
 
 <img src="./logo.png" width="150px" style="border-radius: 0.75rem;" />
 
