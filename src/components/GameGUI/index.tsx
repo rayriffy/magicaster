@@ -120,32 +120,24 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
         if (id === 'reduce-alphabet-effect' || id === 'buff-alphabet-effect') {
           gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
             renderer: new BurnSlotEffect(pr, 3000),
-            onStart: () => console.log('start'),
-            onSuccess: () => console.log('success'),
           })
         }
 
         if (id === 'reduce-card-effect' || id === 'buff-card-effect') {
           gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
             renderer: new ReduceManaSlotEffect(pr, 3000),
-            onStart: () => console.log('start1'),
-            onSuccess: () => console.log('success1'),
           })
         }
 
         if (id === 'reduce-score-effect') {
           gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
             renderer: new ReduceScoreEffect(pr, 3000),
-            onStart: () => console.log('start4'),
-            onSuccess: () => console.log('success4'),
           })
         }
 
         if (id === 'buff-score-effect') {
           gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
             renderer: new ScoreBuffEffect(pr, 3000),
-            onStart: () => console.log('start2'),
-            onSuccess: () => console.log('success2'),
           })
         }
       }
@@ -197,9 +189,8 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
   if (mode === 'LOBBY_GUI') {
     return <LobbyGUI options={options} />
   }
-  console.log('DEBUG: REACH2')
+
   if (gameDisplayRendererRef.current === null) return null
-  console.log('DEBUG: REACH')
 
   return (
     <>

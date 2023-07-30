@@ -99,13 +99,13 @@ Rune.initLogic({
           card.effect
         ) as (keyof Player['stat'])[]
         for (const field of affectedFields) {
-          const before = game.players[playerId].stat[field]
+          // const before = game.players[playerId].stat[field]
           // @ts-ignore
           const after = card.effect[field](
             // @ts-ignore
             game.players[playerId].stat[field]
           )
-          console.log(`${field} changed from ${before} -> ${after}`)
+          // console.log(`${field} changed from ${before} -> ${after}`)
 
           // @ts-ignore
           game.players[playerId].stat[field] = after

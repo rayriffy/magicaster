@@ -13,7 +13,6 @@ export const PlayerAlphabetGrid: FunctionComponent = () => {
         ...gridItems.selectedOrder,
         Number(e.target.id.replace('button-alphabet-', '')),
       ])
-      console.log(e.target.id)
     }
   }, [gridItems])
 
