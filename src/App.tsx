@@ -115,6 +115,22 @@ function App() {
             totalRound: 5,
           }}
         />
+      ) : game.state === 'start' && game.phase === 'planning' ? (
+        <GameGUI
+          mode="PLANNING_GUI"
+          options={{
+            deadline: new Date(game.phaseEndAt).getTime(),
+            score: player!.stat.score,
+            playerInfos: Object.entries(game.players)
+              .filter(([_, player]) => player.ready)
+              .map(([id, player]) => ({
+                playerID: id,
+                name: id,
+                characterIndex: player.avatar!,
+              })),
+            cardIds: player!.stat.cardInventory,
+          }}
+        />
       ) : (
         <p className="text-white text-center pt-12 text-2xl font-bold">
           Missing phase {game.phase}

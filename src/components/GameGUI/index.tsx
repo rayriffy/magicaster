@@ -20,12 +20,19 @@ import RankDisplayGUI, {
   Options as RankDisplayGUIOptions,
 } from './RankDisplayGUI'
 
+import PlanningGUI, {
+  MODE as PlanningGUIMode,
+  Options as PlanningGUIOptions,
+} from './PlanningGUI'
+
 import { Options as GameHeaderDisplayerOptions } from './GameHeaderDisplayer'
 
 import { GameDisplayRenderer, RenderManager } from '../../graphic/renderer'
 import { CHARACTER_COLOR_LIST } from './const'
 import GameHeaderDisplayer from './GameHeaderDisplayer'
 import GameGraphicDisplayer from './GameGraphicDisplayer'
+import EffectQueueRenderer from '../../graphic/renderer/effectQueueRenderer'
+import BurnSlotEffect from '../../graphic/renderer/effects/burnSlotEffect'
 
 type GameGUIProps =
   | {
@@ -44,6 +51,10 @@ type GameGUIProps =
       mode: RankDisplayGUIMode
       options: RankDisplayGUIOptions & GameHeaderDisplayerOptions
     }
+  | {
+      mode: PlanningGUIMode
+      options: PlanningGUIOptions & GameHeaderDisplayerOptions
+    }
 
 const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
   const renderManagerRef = useRef<RenderManager>(new RenderManager())
@@ -58,18 +69,18 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
   useEffect(() => {
     renderManagerRef.current.start()
     renderManagerRef.current.addRenderer(gameDisplayRendererRef.current)
+
     setTimeout(() => {
-      gameDisplayRendererRef.current.animatePosition('RUNNING')
-    }, 2000)
-    setTimeout(() => {
-      gameDisplayRendererRef.current.characterScore =
-        gameDisplayRendererRef.current.characterScore.map(() =>
-          Math.floor(Math.random() * 300)
-        )
-      gameDisplayRendererRef.current.animatePosition('RUNNING')
-    }, 4000)
-    setTimeout(() => {
-      gameDisplayRendererRef.current.animatePosition('END')
+      console.log('add effect')
+
+      const pr = gameDisplayRendererRef.current
+        .getCharacterGroupRenderer()
+        .getCharacterRendererList()[0]
+      gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
+        renderer: new BurnSlotEffect(pr, 5000),
+        onStart: () => console.log('start'),
+        onSuccess: () => console.log('success'),
+      })
     }, 8000)
     return () => {
       renderManagerRef.current.stop()
@@ -104,6 +115,14 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
       />
       {mode === 'WORD_ORDERING' && <WordOrderingGUI options={options} />}
       {mode === 'RANK_DISPLAY' && <RankDisplayGUI options={options} />}
+      {mode === 'PLANNING_GUI' && (
+        <PlanningGUI
+          options={{
+            playerInfos: [],
+            cardIds: [],
+          }}
+        />
+      )}
     </>
   )
 
