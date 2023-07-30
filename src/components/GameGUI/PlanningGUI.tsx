@@ -39,6 +39,21 @@ const CardSlotContainer = styled.div`
   }
 `
 
+const ScrollableDiv = styled.div`
+  display: flex;
+  overflow-x: auto;
+  margin-top: 15px;
+  width: 100%;
+`
+
+const Card = styled.img`
+  flex: 0 0 auto;
+  margin-right: 10px;
+  width: 100px;
+  height: auto;
+  background: green;
+`
+
 const PlanningGUI: React.FC<Props> = ({ options }) => {
   return (
     <>
@@ -48,24 +63,11 @@ const PlanningGUI: React.FC<Props> = ({ options }) => {
         <div>2</div>
         <div>3</div>
       </CardSlotContainer>
-      {/* <RankBoardContainer style={{ marginTop: '10px' }}>
-        {options.playerRankInfos.map(
-          ({ playerID, name, avatarURL, score, cardNumber }) => {
-            return (
-              <PlayerBoardRow key={playerID} name={name} avatarUrl={avatarURL}>
-                <CapsuleContainer>
-                  <Capsule backgroundColor="#F5F92E" fontColor="#444444">
-                    SCORE: {score}
-                  </Capsule>
-                  <Capsule backgroundColor="#424242">
-                    CARD: {cardNumber}
-                  </Capsule>
-                </CapsuleContainer>
-              </PlayerBoardRow>
-            )
-          }
-        )}
-      </RankBoardContainer> */}
+      <ScrollableDiv>
+        {options.cardIds.map((cardId, index) => (
+          <Card src={`./cards/${cardId}.png`} key={`card_${index}`} />
+        ))}
+      </ScrollableDiv>
     </>
   )
 }
