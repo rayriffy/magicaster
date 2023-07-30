@@ -73,6 +73,14 @@ Rune.initLogic({
       })
     },
     activate: (_, { game, playerId }) => {
+      // reset player stat to default before apply new cards
+      game.players[playerId].stat = {
+        ...game.players[playerId].stat,
+        alphabetInventorySize: 16,
+        cardPlayableSize: 4,
+        luck: 1.0,
+      }
+
       let affedtedCards = game.cardPool
         .filter(o => o.to === playerId)
         .map(card => cards.find(c => c.id === card.id)!)
