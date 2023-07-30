@@ -7,14 +7,14 @@ export class RenderManager {
   now: number = -1
 
   start = () => {
-    this.now = Date.now()
+    this.now = Rune.gameTimeInSeconds()
     this.run()
   }
 
   run = () => {
     requestAnimationFrame(() => {
       if (this.now === -1) return
-      const localNow = Date.now()
+      const localNow = Rune.gameTimeInSeconds()
       const delta = localNow - this.now
       this.now = localNow
       for (let renderer of this.renderers) {

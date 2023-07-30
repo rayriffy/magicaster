@@ -138,7 +138,9 @@ class CharacterRenderer implements Renderer {
     }
 
     this.sprite.position.y =
-      Math.sin(Date.now() / 500 + this.randomValue * 500) * this.size * 0.05 +
+      Math.sin(Rune.gameTimeInSeconds() * 2 + this.randomValue * 500) *
+        this.size *
+        0.05 +
       this.originPosition[1]
     this.sprite.position.x = this.originPosition[0]
   }
