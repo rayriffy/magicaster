@@ -127,26 +127,29 @@ const PlanningGUI: React.FC<Props> = ({ renderManager, options }) => {
             ))}
           </CharacterContainer>
 
-          {characterIndex !== null && (
+          <div style={{ display: 'flex', alignContent: 'center' }}>
+            {characterIndex !== null && (
+              <Button
+                style={{ marginRight: 10 }}
+                onClick={() => {
+                  selectCard(
+                    viewInfoCard,
+                    options.playerInfos[characterIndex].playerID
+                  )
+                }}
+              >
+                Confirm
+              </Button>
+            )}
             <Button
               onClick={() => {
-                selectCard(
-                  viewInfoCard,
-                  options.playerInfos[characterIndex].playerID
-                )
+                setViewInfoCard(null)
+                setCharacterIndex(null)
               }}
             >
-              Confirm
+              Cancel
             </Button>
-          )}
-          <Button
-            onClick={() => {
-              setViewInfoCard(null)
-              setCharacterIndex(null)
-            }}
-          >
-            Cancel
-          </Button>
+          </div>
         </>
       )}
     </>
