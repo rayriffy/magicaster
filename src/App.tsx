@@ -4,10 +4,13 @@ import './App.css'
 import * as graphicAssets from './graphic/assets/index.ts'
 import { useRune } from './functions/useRune.ts'
 import { SlotInfo } from './components/GameGUI/WordOrderingGUI.tsx'
+import { useTimer } from './functions/useTimer.ts'
 
 function App() {
   const { game, player, playerId } = useRune()
   const [loadingAssets, setLoadingAssets] = useState<boolean>(true)
+
+  useTimer()
 
   useEffect(() => {
     graphicAssets.load().then(() => {
@@ -89,7 +92,11 @@ function App() {
             onSpell: Rune.actions.submitWord,
           }}
         />
-      ) : null}
+      ) : (
+        <p className="text-white text-center pt-12 text-2xl font-bold">
+          Missing phase {game.phase}
+        </p>
+      )}
     </Fragment>
   )
 

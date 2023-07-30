@@ -1,49 +1,39 @@
-import { useEffect, useMemo, useState } from 'react'
-import dayjs, { Dayjs } from 'dayjs'
+import { useEffect } from 'react'
+import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
-import { useStore } from '@nanostores/react'
-
-import { runeAtom } from '../context/runeAtom'
+import { useRune } from './useRune'
+import { GameState } from '../logic'
+import { getPhaseEndTime } from '../constants/timers'
 
 dayjs.extend(duration)
 
 export const useTimer = () => {
-  const game = useStore(runeAtom)
-
-  const [end, setEnd] = useState<Dayjs>(dayjs().add(2, 'minutes'))
-  const [now, setNow] = useState<Dayjs>(dayjs())
-
-  // calculate difference between now and end, return as object of minute and seconds remaining
-  const remaining = useMemo(() => {
-    const diff = end.diff(now)
-    let duration = dayjs.duration(diff)
-
-    const roundNegative = (val: number) => (val < 0 ? 0 : val)
-
-    return {
-      minutes: roundNegative(duration.minutes()),
-      seconds: roundNegative(duration.seconds()),
-    }
-  }, [end, now])
-
-  const ended = useMemo(
-    () => remaining.minutes === 0 && remaining.seconds === 0,
-    [remaining.minutes, remaining.seconds]
-  )
+  const { game } = useRune()
 
   useEffect(() => {
-    setEnd(dayjs().add(2, 'minutes'))
+    if (!game || game.state === 'end') return
 
+    let endedAt = dayjs(game.phaseEndAt)
     const interval = setInterval(() => {
-      setNow(dayjs())
+      if (endedAt.isBefore(dayjs())) {
+        let targetNextPhase: GameState['phase'] =
+          game.phase === 'build_word'
+            ? 'show_score'
+            : game.phase === 'show_score'
+            ? 'planning'
+            : game.phase === 'planning'
+            ? 'activation'
+            : 'build_word'
+
+        Rune.actions.nextPhase({
+          targetPhase: targetNextPhase,
+          endAt: getPhaseEndTime(targetNextPhase).toISOString(),
+        })
+      }
     }, 1000)
 
-    return () => clearInterval(interval)
-  }, [game?.phase])
-
-  return {
-    remaining,
-    end,
-    ended,
-  }
+    return () => {
+      clearInterval(interval)
+    }
+  }, [game?.phaseEndAt, game?.phase])
 }

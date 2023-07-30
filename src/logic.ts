@@ -6,7 +6,7 @@ import dayjs, { Dayjs } from 'dayjs'
 export interface GameState {
   turn: number
   state: 'start' | 'end'
-  phase: 'build_word' | 'show_score' | 'planning' | 'activation' | 'review'
+  phase: 'build_word' | 'show_score' | 'planning' | 'activation'
   phaseEndAt: string
   players: {
     [key: string]: Player
@@ -18,6 +18,10 @@ type GameActions = {
   setReady(ready: boolean): void
   startGame: (time: string) => void
   submitWord: (word: string) => void
+  nextPhase: (params: {
+    targetPhase: GameState['phase']
+    endAt: string
+  }) => void
 }
 
 declare global {
@@ -31,7 +35,7 @@ Rune.initLogic({
     return {
       turn: 0,
       state: 'end',
-      phase: 'review',
+      phase: 'activation',
       phaseEndAt: new Date().toISOString(),
       players: Object.fromEntries(
         playerIds.map(id => [
@@ -89,6 +93,15 @@ Rune.initLogic({
         // add a random card to player's inventory
         const targetCardId = cards[Math.floor(Math.random() * cards.length)]
         game.players[playerId].stat.cardInventory.push(targetCardId.id)
+      }
+    },
+    nextPhase: ({ targetPhase, endAt }, { game }) => {
+      game.phase = targetPhase
+      game.phaseEndAt = endAt
+
+      if (targetPhase === 'build_word') {
+        if (game.turn < 5) game.turn += 1
+        else Rune.gameOver()
       }
     },
   },
