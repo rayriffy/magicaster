@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js'
-import { getAssets } from '../../assets'
 import { IEffectRenderer } from './types'
 import { Vec2 } from '../types'
 
@@ -25,7 +24,7 @@ abstract class AnimateFrameEffect implements IEffectRenderer {
     return this.animatedSprite
   }
 
-  loop(delta: number): boolean {
+  loop(_delta: number): boolean {
     if (this.startTime === null) {
       this.startTime = Date.now()
       this.animatedSprite.play()

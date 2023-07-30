@@ -31,7 +31,6 @@ import { GameDisplayRenderer, RenderManager } from '../../graphic/renderer'
 import { CHARACTER_COLOR_LIST } from './const'
 import GameHeaderDisplayer from './GameHeaderDisplayer'
 import GameGraphicDisplayer from './GameGraphicDisplayer'
-import EffectQueueRenderer from '../../graphic/renderer/effectQueueRenderer'
 import BurnSlotEffect from '../../graphic/renderer/effects/burnSlotEffect'
 
 type GameGUIProps =
