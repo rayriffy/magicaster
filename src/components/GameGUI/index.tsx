@@ -37,6 +37,7 @@ import { CHARACTER_COLOR_LIST } from './const'
 import GameHeaderDisplayer from './GameHeaderDisplayer'
 import GameGraphicDisplayer from './GameGraphicDisplayer'
 import BurnSlotEffect from '../../graphic/renderer/effects/burnSlotEffect'
+import ReduceManaSlotEffect from '../../graphic/renderer/effects/reduceManaEffect'
 
 type GameGUIProps =
   | {
@@ -79,8 +80,6 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
     renderManagerRef.current.addRenderer(gameDisplayRendererRef.current)
 
     setTimeout(() => {
-      console.log('add effect')
-
       const pr = gameDisplayRendererRef.current
         .getCharacterGroupRenderer()
         .getCharacterRendererList()[0]
@@ -88,6 +87,12 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
         renderer: new BurnSlotEffect(pr, 5000),
         onStart: () => console.log('start'),
         onSuccess: () => console.log('success'),
+      })
+
+      gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
+        renderer: new ReduceManaSlotEffect(pr, 3000),
+        onStart: () => console.log('start1'),
+        onSuccess: () => console.log('success2'),
       })
     }, 8000)
     return () => {
