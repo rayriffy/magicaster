@@ -66,6 +66,13 @@ Rune.initLogic({
   },
   actions: {
     applyCard: (card, { game, playerId }) => {
+      // remove 1 card from player inventory
+      game.players[playerId].stat.cardInventory.splice(
+        game.players[playerId].stat.cardInventory.findIndex(c => c === card.id),
+        1
+      )
+
+      // add card into a pool
       game.cardPool.push({
         id: card.id,
         from: playerId,
@@ -98,7 +105,7 @@ Rune.initLogic({
         }
       }
     },
-    startGame: (time, { game, playerId }) => {
+    startGame: (time, { game }) => {
       game.state = 'start'
       game.turn = 1
       game.phase = 'build_word'
