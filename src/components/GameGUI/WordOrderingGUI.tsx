@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import styled from 'styled-components'
-import Title from '../Title'
 import Button from '../Button'
+import CardNumberIcon from '../CardNumberIcon'
 
 export type MODE = 'WORD_ORDERING'
 
@@ -13,6 +13,7 @@ export type SlotInfo = {
 
 export type Options = {
   slotInfos: SlotInfo[]
+  cardNumber: number
   onSpell?: (word: string) => void
 }
 
@@ -53,6 +54,7 @@ const Slot = styled.div<{ size: number; disable: boolean; selected: boolean }>`
 
 const Container = styled.div`
   padding: 0px 20px;
+  position: relative;
 `
 
 const WordPreviewContainer = styled.div`
@@ -83,6 +85,15 @@ const Footer = styled.div`
   padding: 20px 0px;
 `
 
+const CardNumberIconContainer = styled.div`
+  position: absolute;
+  height: 80px;
+  width: 60px;
+  transform: translate(-100%, -100%);
+  top: 0px;
+  left: calc(100% - 20px);
+`
+
 const WordOrderingGUI: React.FC<Props> = ({ options }) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const [width, setWidth] = useState<number>(0)
@@ -97,6 +108,9 @@ const WordOrderingGUI: React.FC<Props> = ({ options }) => {
 
   return (
     <Container>
+      <CardNumberIconContainer>
+        <CardNumberIcon number={options.cardNumber} />
+      </CardNumberIconContainer>
       <WordPreviewContainer>
         <WordContainer>
           {[

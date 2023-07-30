@@ -65,6 +65,7 @@ function App() {
       options={{
         deadline: Date.now() + 1000 * 120,
         score: 100,
+        cardNumber: 10,
         slotInfos: Array(4 * 4)
           .fill(1)
           .map<SlotInfo>((_, index) => ({
