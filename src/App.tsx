@@ -23,7 +23,7 @@ function App() {
     <Fragment>
       {!game || loadingAssets ? (
         <div>Loading...</div>
-      ) : game.state === 'end' && !player?.avatar ? (
+      ) : game.state === 'end' && player?.avatar === null ? (
         <GameGUI
           mode="CHOOSE_CHARACTER_GUI"
           options={{
@@ -38,13 +38,13 @@ function App() {
             },
           }}
         />
-      ) : game.state === 'end' && player?.avatar ? (
+      ) : game.state === 'end' && player?.avatar !== null ? (
         <GameGUI
           mode="LOBBY_GUI"
           options={{
             playerID: playerId,
             playerLobbyInfos: Object.entries(game.players)
-              .filter(([_, player]) => player.avatar)
+              .filter(([_, player]) => player.avatar !== null)
               .map(([id, player]) => ({
                 name: id,
                 playerID: id,
@@ -56,13 +56,13 @@ function App() {
             onReady: () => Rune.actions.setReady(true),
           }}
         />
-      ) : game.state === 'end' && player?.avatar ? (
+      ) : game.state === 'end' && player?.avatar !== null ? (
         <GameGUI
           mode="LOBBY_GUI"
           options={{
             playerID: playerId,
             playerLobbyInfos: Object.entries(game.players)
-              .filter(([_, player]) => player.avatar)
+              .filter(([_, player]) => player.avatar !== null)
               .map(([id, player]) => ({
                 name: id,
                 playerID: id,
