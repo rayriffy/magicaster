@@ -1,10 +1,9 @@
 import styled from 'styled-components'
 import React from 'react'
 import Title from '../Title'
-import PlayerBoardRow from '../PlayerBoardRow'
-import Capsule from '../Capsule'
 import CharacterDisplayer from './CharacterDisplayer'
 import { RenderManager } from '../../graphic/renderer'
+import Button from '../Button'
 
 export type MODE = 'PLANNING_GUI'
 
@@ -55,19 +54,35 @@ const Card = styled.img`
   width: 100px;
   height: auto;
 `
+const CharacterContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 10px;
+  margin-top: 15px;
+  width: 100%;
+`
 
 const MAX_SLOT = 3
 const PlanningGUI: React.FC<Props> = ({ renderManager, options }) => {
   const [selectedCards, setSelectedCards] = React.useState<number[]>([])
   const [viewInfoCard, setViewInfoCard] = React.useState<number | null>(null)
+  const [characterIndex, setCharacterIndex] = React.useState<number | null>(
+    null
+  )
 
-  const selectCard = (index: number) => {
+  const selectCard = (cardIndex: number, targetPlayerId: string) => {
     if (selectedCards.length >= MAX_SLOT) {
       return
     }
 
     setViewInfoCard(null)
-    setSelectedCards(cards => [...cards, index])
+    setCharacterIndex(null)
+    setSelectedCards(cards => [...cards, cardIndex])
+
+    Rune.actions.applyCard({
+      id: options.cardIds[cardIndex],
+      to: targetPlayerId,
+    })
   }
 
   if (options.cardIds.length === 0) {
@@ -87,22 +102,55 @@ const PlanningGUI: React.FC<Props> = ({ renderManager, options }) => {
         {options.cardIds.map((cardId, index) => (
           <Card
             onClick={() => {
+              if (selectedCards.includes(index)) return
               setViewInfoCard(index)
             }}
             src={`./cards/${cardId}.png`}
             key={`card_${index}`}
+            style={{
+              opacity: selectedCards.includes(index) ? 0.5 : 1,
+            }}
           />
         ))}
       </ScrollableDiv>
       {viewInfoCard !== null && (
-        <div style={{ marginTop: 15 }}>
-          {options.playerInfos.map(playerInfo => (
-            <CharacterDisplayer
-              characterIndex={playerInfo.characterIndex}
-              renderManager={renderManager}
-            />
-          ))}
-        </div>
+        <>
+          <CharacterContainer style={{ marginTop: 15 }}>
+            {options.playerInfos.map(playerInfo => (
+              <CharacterDisplayer
+                characterIndex={playerInfo.characterIndex}
+                renderManager={renderManager}
+                onClick={() => {
+                  setCharacterIndex(playerInfo.characterIndex)
+                }}
+              />
+            ))}
+          </CharacterContainer>
+
+          <div style={{ display: 'flex', alignContent: 'center' }}>
+            {characterIndex !== null && (
+              <Button
+                style={{ marginRight: 10 }}
+                onClick={() => {
+                  selectCard(
+                    viewInfoCard,
+                    options.playerInfos[characterIndex].playerID
+                  )
+                }}
+              >
+                Confirm
+              </Button>
+            )}
+            <Button
+              onClick={() => {
+                setViewInfoCard(null)
+                setCharacterIndex(null)
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
+        </>
       )}
     </>
   )
