@@ -2,12 +2,12 @@
 
 <img src="./logo.png" width="150px" style="border-radius: 0.75rem;" />
 
-This is a game created as a part of [ReactJam 2023](https://reactjam.com/). The game is aim to combine the fun of playing board games together with scribble.
+This is a game created as a part of [ReactJam 2023](https://reactjam.com/). The game is aim to combine the fun of playing board games together with scrabble.
 
 ## Game phases
 
 1. Each game will play 5 turns. Each turn contains different phases.
-   1. **Phase 1: Word building**: You're playing as a normal scribble. Longer the words, higher chance of a card drop, higher the score.
+   1. **Phase 1: Word building**: You're playing as a normal scrabble. Longer the words, higher chance of a card drop, higher the score.
    2. **Phase 2: Review**: Review each score of every players, this will help you to plan your move on next phase
    3. **Phase 3: Planning**: Now, you will use your spelling cards in any way to gain avantage to yourself.
    4. **Phase 4: Activation**: Review all the cards you has been recieved from the others player before moving to the next turn.
