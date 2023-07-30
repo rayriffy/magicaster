@@ -68,11 +68,9 @@ class CharacterGroupRenderer implements Renderer {
     xTarget: number
   ) => {
     const startX = xTarget - xPortions[focusID]
-    Object.entries(this.characterRendererMap).forEach(
-      ([id, renderer], index) => {
-        renderer.animateTo({ x: xPortions[id] + startX })
-      }
-    )
+    Object.entries(this.characterRendererMap).forEach(([id, renderer]) => {
+      renderer.animateTo({ x: xPortions[id] + startX })
+    })
   }
 }
 

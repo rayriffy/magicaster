@@ -37,10 +37,7 @@ import GameGraphicDisplayer from './GameGraphicDisplayer'
 import BurnSlotEffect from '../../graphic/renderer/effects/burnSlotEffect'
 import ReduceManaSlotEffect from '../../graphic/renderer/effects/reduceManaEffect'
 import ScoreBuffEffect from '../../graphic/renderer/effects/scoreBuffEffect'
-import ShieldEffect from '../../graphic/renderer/effects/shieldEffect'
 import ReduceScoreEffect from '../../graphic/renderer/effects/reduceScoreEffect'
-import { ActivatedCard } from '../../logic'
-import { cards } from '../../constants/cards'
 import { useRune } from '../../functions/useRune'
 
 type GameGUIProps =

@@ -3,12 +3,7 @@ import GameGUI from './components/GameGUI'
 import './App.css'
 import * as graphicAssets from './graphic/assets/index.ts'
 import { useRune } from './functions/useRune.ts'
-import { SlotInfo } from './components/GameGUI/WordOrderingGUI.tsx'
 import { useTimer } from './functions/useTimer.ts'
-import {
-  randomCharArray,
-  randomCharacter,
-} from './functions/randomCharacter.ts'
 
 function App() {
   const { game, player, playerId } = useRune()

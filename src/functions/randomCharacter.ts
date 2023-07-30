@@ -84,7 +84,7 @@ export const randomCharArray = (
 ) => {
   const countMap = buildCounMap(initArray)
   let charProps = chanceMap.filter(
-    ([char, prop]) => (countMap[char] || 0) < limit
+    ([char]) => (countMap[char] || 0) < limit
   )
   let result = []
   for (let index = 0; index < amount; index++) {
@@ -96,7 +96,7 @@ export const randomCharArray = (
       ? countMap[randChar] + 1
       : 1
     charProps = chanceMap.filter(
-      ([char, prop]) => (countMap[char] || 0) < limit
+      ([char]) => (countMap[char] || 0) < limit
     )
   }
   return result
