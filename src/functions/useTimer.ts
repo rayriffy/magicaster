@@ -43,6 +43,7 @@ export const useTimer = () => {
 
   return {
     remaining,
+    end,
     ended,
   }
 }

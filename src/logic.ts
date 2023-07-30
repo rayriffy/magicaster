@@ -1,10 +1,13 @@
 import type { Player } from './@types/Player'
 import type { RuneClient } from 'rune-games-sdk/multiplayer'
+import { cards } from './constants/cards'
+import dayjs, { Dayjs } from 'dayjs'
 
 export interface GameState {
   turn: number
   state: 'start' | 'end'
   phase: 'build_word' | 'show_score' | 'planning' | 'activation' | 'review'
+  phaseEndAt: string
   players: {
     [key: string]: Player
   }
@@ -13,8 +16,8 @@ export interface GameState {
 type GameActions = {
   setCharacter(targetId: number): void
   setReady(ready: boolean): void
-  startGame: () => void
-  submitWord: () => void
+  startGame: (time: string) => void
+  submitWord: (word: string) => void
 }
 
 declare global {
@@ -29,6 +32,7 @@ Rune.initLogic({
       turn: 0,
       state: 'end',
       phase: 'review',
+      phaseEndAt: new Date().toISOString(),
       players: Object.fromEntries(
         playerIds.map(id => [
           id,
@@ -39,8 +43,9 @@ Rune.initLogic({
             stat: {
               score: 0,
               alphabetInventorySize: 16,
-              cardInventorySize: 4,
+              cardPlayableSize: 4,
               luck: 1.0,
+              cardInventory: [],
             },
           },
         ])
@@ -48,18 +53,44 @@ Rune.initLogic({
     }
   },
   actions: {
-    startGame: (_, { game }) => {
+    startGame: (time, { game, playerId }) => {
       game.state = 'start'
       game.turn = 1
       game.phase = 'build_word'
+      game.phaseEndAt = time
     },
     setCharacter: (targetId, { game, playerId }) => {
       game.players[playerId].avatar = targetId
     },
     setReady: (ready, { game, playerId }) => {
       game.players[playerId].ready = ready
+      game.players[playerId].phaseCompleted = false
+      game.players[playerId].stat = {
+        score: 0,
+        alphabetInventorySize: 16,
+        cardPlayableSize: 4,
+        luck: 1.0,
+        cardInventory: [],
+      }
     },
-    submitWord: () => {},
+    submitWord: (word, { game, playerId }) => {
+      // determine score player will get
+      let score =
+        word.length <= 4
+          ? word.length
+          : word.length <= 7
+          ? word.length * 1.25
+          : word.length * 2
+
+      // apply score to player
+      game.players[playerId].stat.score += score
+
+      if (word.length >= 4) {
+        // add a random card to player's inventory
+        const targetCardId = cards[Math.floor(Math.random() * cards.length)]
+        game.players[playerId].stat.cardInventory.push(targetCardId.id)
+      }
+    },
   },
   events: {
     playerJoined: (playerId, { game }) => {
@@ -71,8 +102,9 @@ Rune.initLogic({
         stat: {
           score: 0,
           alphabetInventorySize: 16,
-          cardInventorySize: 4,
+          cardPlayableSize: 4,
           luck: 1.0,
+          cardInventory: [],
         },
       }
     },

@@ -25,6 +25,7 @@ export class RenderManager {
   }
 
   stop = () => {
+    this.renderers = []
     this.now = -1
   }
 

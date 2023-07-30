@@ -71,7 +71,10 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
     setTimeout(() => {
       gameDisplayRendererRef.current.animatePosition('END')
     }, 8000)
-    return renderManagerRef.current.stop
+    return () => {
+      renderManagerRef.current.stop()
+      gameDisplayRendererRef.current.destroy()
+    }
   }, [])
 
   if (mode === 'CHOOSE_CHARACTER_GUI') {

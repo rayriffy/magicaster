@@ -17,7 +17,7 @@ export const cards: Card[] = [
     name: 'Reduce Card',
     description: 'Reduce target player card slot by 1',
     effect: {
-      cardInventorySize: size => (size <= 2 ? size : size - 1),
+      cardPlayableSize: size => (size <= 2 ? size : size - 1),
     },
   },
   {

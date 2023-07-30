@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import GameGUI from './components/GameGUI'
 import './App.css'
 import * as graphicAssets from './graphic/assets/index.ts'
@@ -15,48 +15,83 @@ function App() {
     })
   }, [])
 
-  if (!game || loadingAssets) {
-    return <div>Loading...</div>
-  }
-
-  if (game.state === 'end' && !player?.avatar) {
-    return (
-      <GameGUI
-        mode="CHOOSE_CHARACTER_GUI"
-        options={{
-          playerID: playerId,
-          characterSelections: Object.fromEntries(
-            Object.keys(game.players)
-              .map(playerId => [playerId, game.players[playerId].avatar])
-              .filter(([_, val]) => val)
-          ),
-          onSubmit: index => {
-            Rune.actions.setCharacter(index)
-          },
-        }}
-      />
-    )
-  } else if (game.state === 'end' && player?.avatar) {
-    return (
-      <GameGUI
-        mode="LOBBY_GUI"
-        options={{
-          playerID: playerId,
-          playerLobbyInfos: Object.entries(game.players)
-            .filter(([_, player]) => player.avatar)
-            .map(([id, player]) => ({
-              name: id,
-              playerID: id,
-              isReady: player.ready,
-              avatarUrl:
-                'https://fastly.picsum.photos/id/791/100/100.jpg?hmac=WEb2YRQzOxdTKepKuaQlWqG1RNRKSAytYrC6dB3kMAY',
-            })),
-          onCancel: () => Rune.actions.setReady(false),
-          onReady: () => Rune.actions.setReady(true),
-        }}
-      />
-    )
-  }
+  return (
+    <Fragment>
+      {!game || loadingAssets ? (
+        <div>Loading...</div>
+      ) : game.state === 'end' && !player?.avatar ? (
+        <GameGUI
+          mode="CHOOSE_CHARACTER_GUI"
+          options={{
+            playerID: playerId,
+            characterSelections: Object.fromEntries(
+              Object.keys(game.players)
+                .map(playerId => [playerId, game.players[playerId].avatar])
+                .filter(([_, val]) => val)
+            ),
+            onSubmit: index => {
+              Rune.actions.setCharacter(index)
+            },
+          }}
+        />
+      ) : game.state === 'end' && player?.avatar ? (
+        <GameGUI
+          mode="LOBBY_GUI"
+          options={{
+            playerID: playerId,
+            playerLobbyInfos: Object.entries(game.players)
+              .filter(([_, player]) => player.avatar)
+              .map(([id, player]) => ({
+                name: id,
+                playerID: id,
+                isReady: player.ready,
+                avatarUrl:
+                  'https://fastly.picsum.photos/id/791/100/100.jpg?hmac=WEb2YRQzOxdTKepKuaQlWqG1RNRKSAytYrC6dB3kMAY',
+              })),
+            onCancel: () => Rune.actions.setReady(false),
+            onReady: () => Rune.actions.setReady(true),
+          }}
+        />
+      ) : game.state === 'end' && player?.avatar ? (
+        <GameGUI
+          mode="LOBBY_GUI"
+          options={{
+            playerID: playerId,
+            playerLobbyInfos: Object.entries(game.players)
+              .filter(([_, player]) => player.avatar)
+              .map(([id, player]) => ({
+                name: id,
+                playerID: id,
+                isReady: player.ready,
+                avatarUrl:
+                  'https://fastly.picsum.photos/id/791/100/100.jpg?hmac=WEb2YRQzOxdTKepKuaQlWqG1RNRKSAytYrC6dB3kMAY',
+              })),
+            onCancel: () => Rune.actions.setReady(false),
+            onReady: () => Rune.actions.setReady(true),
+          }}
+        />
+      ) : game.state === 'start' && game.phase === 'build_word' ? (
+        <GameGUI
+          mode="WORD_ORDERING"
+          options={{
+            deadline: new Date(game.phaseEndAt).getTime(),
+            score: player!.stat.score,
+            cardNumber: player!.stat.cardInventory.length,
+            slotInfos: Array(4 * 4)
+              .fill(1)
+              .map<SlotInfo>((_, index) => ({
+                id: `slot-${index}`,
+                character: String.fromCharCode(
+                  65 + Math.floor((90 - 65) * Math.random())
+                ),
+                isDisable: false,
+              })),
+            onSpell: Rune.actions.submitWord,
+          }}
+        />
+      ) : null}
+    </Fragment>
+  )
 
   // BEBUG: WORD ORDERING
   // return (
@@ -79,28 +114,28 @@ function App() {
   //     }}
   //   />
 
-  return (
-    <GameGUI
-      mode="RANK_DISPLAY"
-      options={{
-        deadline: 0,
-        score: 100,
-        playerRankInfos: Object.entries(game.players)
-          .filter(([_, player]) => player.avatar)
-          .map(([id, player]) => ({
-            playerID: id,
-            name: id,
-            avatarURL:
-              'https://fastly.picsum.photos/id/791/100/100.jpg?hmac=WEb2YRQzOxdTKepKuaQlWqG1RNRKSAytYrC6dB3kMAY',
+  // return (
+  //   <GameGUI
+  //     mode="RANK_DISPLAY"
+  //     options={{
+  //       deadline: 0,
+  //       score: 100,
+  //       playerRankInfos: Object.entries(game.players)
+  //         .filter(([_, player]) => player.avatar)
+  //         .map(([id, player]) => ({
+  //           playerID: id,
+  //           name: id,
+  //           avatarURL:
+  //             'https://fastly.picsum.photos/id/791/100/100.jpg?hmac=WEb2YRQzOxdTKepKuaQlWqG1RNRKSAytYrC6dB3kMAY',
 
-            score: Math.floor(Math.random() * 100),
-            cardNumber: Math.floor(Math.random() * 10),
-          })),
-        round: 2,
-        totalRound: 5,
-      }}
-    />
-  )
+  //           score: Math.floor(Math.random() * 100),
+  //           cardNumber: Math.floor(Math.random() * 10),
+  //         })),
+  //       round: 2,
+  //       totalRound: 5,
+  //     }}
+  //   />
+  // )
 }
 
 export default App

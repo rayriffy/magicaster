@@ -5,7 +5,8 @@ export interface Player {
   stat: {
     score: number
     alphabetInventorySize: number
-    cardInventorySize: number
+    cardPlayableSize: number
     luck: number
+    cardInventory: string[]
   }
 }
