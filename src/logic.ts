@@ -126,18 +126,37 @@ Rune.initLogic({
       }
     },
     submitWord: (word, { game, playerId }) => {
+      const length = word.length
       // determine score player will get
       let score =
-        word.length <= 4
-          ? word.length
-          : word.length <= 7
-          ? word.length * 1.25
-          : word.length * 2
+        length >= 7
+          ? length * 2
+          : length === 6
+          ? length * 1.5
+          : length === 5
+          ? length * 1.25
+          : length === 4
+          ? length * 1.1
+          : length
 
       // apply score to player
       game.players[playerId].stat.score += score
 
-      if (word.length >= 4) {
+      const isChanceMatch = (percent: number) => {
+        return Math.floor(Math.random() * 100) < percent
+      }
+      const cardDropChance =
+        length >= 7
+          ? 100
+          : length === 6
+          ? 50
+          : length === 5
+          ? 25
+          : length === 4
+          ? 10
+          : 0
+
+      if (isChanceMatch(cardDropChance)) {
         // add a random card to player's inventory
         const targetCardId = cards[Math.floor(Math.random() * cards.length)]
         game.players[playerId].stat.cardInventory.push(targetCardId.id)
