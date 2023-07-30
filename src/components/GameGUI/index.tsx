@@ -38,6 +38,9 @@ import GameHeaderDisplayer from './GameHeaderDisplayer'
 import GameGraphicDisplayer from './GameGraphicDisplayer'
 import BurnSlotEffect from '../../graphic/renderer/effects/burnSlotEffect'
 import ReduceManaSlotEffect from '../../graphic/renderer/effects/reduceManaEffect'
+import ScoreBuffEffect from '../../graphic/renderer/effects/scoreBuffEffect'
+import ShieldEffect from '../../graphic/renderer/effects/shieldEffect'
+import ReduceScoreEffect from '../../graphic/renderer/effects/reduceScoreEffect'
 
 type GameGUIProps =
   | {
@@ -83,8 +86,9 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
       const pr = gameDisplayRendererRef.current
         .getCharacterGroupRenderer()
         .getCharacterRendererList()[0]
+
       gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
-        renderer: new BurnSlotEffect(pr, 5000),
+        renderer: new BurnSlotEffect(pr, 3000),
         onStart: () => console.log('start'),
         onSuccess: () => console.log('success'),
       })
@@ -92,7 +96,25 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
       gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
         renderer: new ReduceManaSlotEffect(pr, 3000),
         onStart: () => console.log('start1'),
+        onSuccess: () => console.log('success1'),
+      })
+
+      gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
+        renderer: new ReduceScoreEffect(pr, 3000),
+        onStart: () => console.log('start4'),
+        onSuccess: () => console.log('success4'),
+      })
+
+      gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
+        renderer: new ScoreBuffEffect(pr, 3000),
+        onStart: () => console.log('start2'),
         onSuccess: () => console.log('success2'),
+      })
+
+      gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
+        renderer: new ShieldEffect(pr, 3000),
+        onStart: () => console.log('start3'),
+        onSuccess: () => console.log('success3'),
       })
     }, 8000)
     return () => {

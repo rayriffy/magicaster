@@ -12,7 +12,7 @@ type Params = {
 abstract class AnimateFrameEffect implements IEffectRenderer {
   private duration: number
   public position: Vec2
-  private animatedSprite: PIXI.AnimatedSprite
+  public animatedSprite: PIXI.AnimatedSprite
   private startTime: number | null = null
   constructor({ duration, position, animatedSprite }: Params) {
     this.duration = duration
