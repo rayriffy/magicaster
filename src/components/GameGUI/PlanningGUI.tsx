@@ -16,6 +16,7 @@ export type PlayerInfo = {
 export type Options = {
   playerInfos: PlayerInfo[]
   cardIds: string[]
+  maxSlot: number
 }
 
 export type Props = {
@@ -62,7 +63,6 @@ const CharacterContainer = styled.div`
   width: 100%;
 `
 
-const MAX_SLOT = 3
 const PlanningGUI: React.FC<Props> = ({ renderManager, options }) => {
   const [selectedCards, setSelectedCards] = React.useState<number[]>([])
   const [viewInfoCard, setViewInfoCard] = React.useState<number | null>(null)
@@ -71,7 +71,7 @@ const PlanningGUI: React.FC<Props> = ({ renderManager, options }) => {
   )
 
   const selectCard = (cardIndex: number, targetPlayerId: string) => {
-    if (selectedCards.length >= MAX_SLOT) {
+    if (selectedCards.length >= options.maxSlot) {
       return
     }
 
@@ -96,7 +96,7 @@ const PlanningGUI: React.FC<Props> = ({ renderManager, options }) => {
   return (
     <>
       <Title style={{ marginTop: '20px' }}>
-        Choose Your Cards ({selectedCards.length} / {MAX_SLOT})
+        Choose Your Cards ({selectedCards.length} / {options.maxSlot})
       </Title>
       <ScrollableDiv>
         {options.cardIds.map((cardId, index) => (

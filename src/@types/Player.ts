@@ -6,7 +6,6 @@ export interface Player {
     score: number
     alphabetInventorySize: number
     cardPlayableSize: number
-    luck: number
     cardInventory: string[]
   }
 }
