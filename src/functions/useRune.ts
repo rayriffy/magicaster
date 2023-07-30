@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from 'react'
 
-import dayjs from 'dayjs'
 import { useStore } from '@nanostores/react'
 
 import { runeAtom, playerIdAtom } from '../context/runeAtom'
@@ -30,7 +29,7 @@ export const useRune = () => {
         game.state === 'end' &&
         Object.keys(game.players).every(player => game.players[player].ready)
       ) {
-        Rune.actions.startGame(getPhaseEndTime('build_word').toISOString())
+        Rune.actions.startGame(getPhaseEndTime('build_word'))
       }
     }
   }, [game?.players, playerId])

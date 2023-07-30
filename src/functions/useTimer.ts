@@ -1,11 +1,7 @@
 import { useEffect } from 'react'
-import dayjs from 'dayjs'
-import duration from 'dayjs/plugin/duration'
 import { useRune } from './useRune'
 import { GameState } from '../logic'
 import { getPhaseEndTime } from '../constants/timers'
-
-dayjs.extend(duration)
 
 export const useTimer = () => {
   const { game } = useRune()
@@ -13,9 +9,9 @@ export const useTimer = () => {
   useEffect(() => {
     if (!game || game.state === 'end') return
 
-    let endedAt = dayjs(game.phaseEndAt)
+    let endedAt = game.phaseEndAt
     const interval = setInterval(() => {
-      if (endedAt.isBefore(dayjs())) {
+      if (endedAt > Rune.gameTimeInSeconds()) {
         let targetNextPhase: GameState['phase'] =
           game.phase === 'build_word'
             ? 'show_score'
@@ -27,7 +23,7 @@ export const useTimer = () => {
 
         Rune.actions.nextPhase({
           targetPhase: targetNextPhase,
-          endAt: getPhaseEndTime(targetNextPhase).toISOString(),
+          endAt: getPhaseEndTime(targetNextPhase),
         })
       }
     }, 1000)

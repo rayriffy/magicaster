@@ -77,7 +77,7 @@ function App() {
         <GameGUI
           mode="WORD_ORDERING"
           options={{
-            deadline: new Date(game.phaseEndAt).getTime(),
+            deadline: new Date(game.phaseEndAt * 1000).getTime(),
             score: player!.stat.score,
             cardNumber: player!.stat.cardInventory.length,
             slotInfos: Array(4 * 4)
@@ -98,7 +98,7 @@ function App() {
         <GameGUI
           mode="RANK_DISPLAY"
           options={{
-            deadline: new Date(game.phaseEndAt).getTime(),
+            deadline: new Date(game.phaseEndAt * 1000).getTime(),
             score: player!.stat.score,
             playerRankInfos: Object.entries(game.players)
               .filter(([_, player]) => player.ready)
@@ -119,7 +119,7 @@ function App() {
         <GameGUI
           mode="PLANNING_GUI"
           options={{
-            deadline: new Date(game.phaseEndAt).getTime(),
+            deadline: new Date(game.phaseEndAt * 1000).getTime(),
             score: player!.stat.score,
             playerInfos: Object.entries(game.players)
               .filter(([_, player]) => player.ready)

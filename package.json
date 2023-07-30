@@ -1,5 +1,5 @@
 {
-  "name": "reactjam2023",
+  "name": "spell-calamiry",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@nanostores/react": "^0.7.1",
-    "dayjs": "^1.11.9",
     "nanostores": "^0.9.3",
     "pixi.js": "^7.2.4",
     "react": "^18.2.0",

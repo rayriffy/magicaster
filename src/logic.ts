@@ -7,7 +7,7 @@ export interface GameState {
   turn: number
   state: 'start' | 'end'
   phase: 'build_word' | 'show_score' | 'planning' | 'activation'
-  phaseEndAt: string
+  phaseEndAt: number
   cardPool: {
     id: string
     from: string
@@ -21,13 +21,13 @@ export interface GameState {
 type GameActions = {
   setCharacter(targetId: number): void
   setReady(ready: boolean): void
-  startGame: (time: string) => void
+  startGame: (time: number) => void
   submitWord: (word: string) => void
   applyCard: (params: { id: string; from: string; to: string }) => void
   activate: () => void
   nextPhase: (params: {
     targetPhase: GameState['phase']
-    endAt: string
+    endAt: number
   }) => void
 }
 
@@ -44,7 +44,7 @@ Rune.initLogic({
       state: 'end',
       phase: 'activation',
       cardPool: [],
-      phaseEndAt: new Date().toISOString(),
+      phaseEndAt: Rune.gameTimeInSeconds(),
       players: Object.fromEntries(
         playerIds.map(id => [
           id,
