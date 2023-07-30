@@ -1,87 +1,156 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import styled from 'styled-components'
-import GameGraphicDisplayer from './GameGraphicDisplayer'
-import { GameDisplayRenderer, RenderManager } from '../../graphic/renderer'
-import Paragraph from '../Paragraph'
 import Title from '../Title'
-import Container from '../Container'
-import { Renderer } from '../../graphic/renderer/types'
+import Button from '../Button'
 
 export type MODE = 'WORD_ORDERING'
 
+export type SlotInfo = {
+  id: string
+  character: string
+  isDisable: boolean
+}
+
 export type Options = {
-  score: number
-  deadline: number
+  slotInfos: SlotInfo[]
+  onSpell?: (word: string) => void
 }
 
 export type Props = {
-  gameDisplayRenderer: GameDisplayRenderer
-  renderManager: RenderManager
   options: Options
 }
 
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 15px;
-  padding-bottom: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
+const SLOT_GAP = 10
+const SLOT_COLUMS = 4
+const MAX_CHARACTER = 8
+
+const SloteContainer = styled.div<{ columnNumber: number }>`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(
+    ${({ columnNumber }) => columnNumber},
+    max-content
+  );
+  gap: ${SLOT_GAP}px;
 `
 
-class TimerRenderer implements Renderer {
-  private elem: HTMLDivElement
-  private deadline: number
-  constructor(elem: HTMLDivElement, deadline: number) {
-    this.elem = elem
-    this.deadline = deadline
-  }
+const Slot = styled.div<{ size: number; disable: boolean; selected: boolean }>`
+  width: ${({ size }) => size}px;
+  height: ${({ size }) => size}px;
+  background: white;
+  border-radius: 5px;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  font-weight: bold;
+  border-width: ${({ selected, disable }) =>
+    selected && !disable ? '5px' : '0px'};
+  border-color: #845bfa;
+  transition: 0.3s;
+`
 
-  loop(): void {
-    const remain = Math.max(this.deadline - Date.now(), 0)
-    const remainSec = Math.floor(remain / 1000)
-    const remainMin = Math.floor(remainSec / 60)
-    const min = Math.floor(remainMin % 60) + ''
-    const sec = Math.floor(remainSec % 60) + ''
-    const minString =
-      Array(Math.max(2 - min.length, 0))
-        .fill('0')
-        .join('') + min
-    const secString =
-      Array(Math.max(2 - sec.length, 0))
-        .fill('0')
-        .join('') + sec
-    this.elem.innerHTML = `${minString}:${secString}`
-  }
-}
+const Container = styled.div`
+  padding: 0px 20px;
+`
 
-const WordOrderingGUI: React.FC<Props> = ({
-  gameDisplayRenderer,
-  renderManager,
-  options,
-}) => {
-  const timerRef = useRef<HTMLDivElement | null>(null)
-  const timerRendererRef = useRef<TimerRenderer | null>(null)
+const WordPreviewContainer = styled.div`
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+`
+
+const WordContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(${MAX_CHARACTER}, 20px);
+  gap: 3px;
+  > div {
+    font-weight: bold;
+    color: white;
+    font-size: 28px;
+  }
+`
+
+const Footer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 20px 0px;
+`
+
+const WordOrderingGUI: React.FC<Props> = ({ options }) => {
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const [width, setWidth] = useState<number>(0)
+  const [selectedCharacters, setSelectedCharacters] = useState<number[]>([])
 
   useEffect(() => {
-    if (timerRef.current == null) return
-    const timerRenderer = new TimerRenderer(timerRef.current, options.deadline)
-    timerRendererRef.current = timerRenderer
-    renderManager.addRenderer(timerRenderer)
-    return () => renderManager.removeRenderer(timerRenderer)
+    if (containerRef.current === null) return
+    const newWidth = containerRef.current?.getBoundingClientRect().width
+    setWidth(newWidth)
   }, [])
+  const slotSize = (width - (SLOT_COLUMS - 1) * SLOT_GAP) / SLOT_COLUMS
 
   return (
-    <>
-      <Header>
-        <Paragraph>SCORE: {options.score ?? 0}</Paragraph>
-        <Title>
-          <div ref={timerRef}></div>
-        </Title>
-      </Header>
-      <GameGraphicDisplayer gameDisplayRenderer={gameDisplayRenderer} />
-    </>
+    <Container>
+      <WordPreviewContainer>
+        <WordContainer>
+          {[
+            ...selectedCharacters,
+            ...Array(MAX_CHARACTER - selectedCharacters.length).fill(-1),
+          ].map((charIndex, index) => (
+            <div key={`preview-character-${index}`}>
+              {charIndex === -1 ? '_' : options.slotInfos[charIndex].character}
+            </div>
+          ))}
+        </WordContainer>
+      </WordPreviewContainer>
+      <SloteContainer ref={containerRef} columnNumber={SLOT_COLUMS}>
+        {options.slotInfos.map(({ id, character, isDisable }, index) => {
+          const isSelected = selectedCharacters.includes(index)
+          return (
+            <Slot
+              id={id}
+              size={slotSize}
+              disable={isDisable}
+              selected={isSelected}
+              onClick={() => {
+                if (isSelected) {
+                  setSelectedCharacters(
+                    selectedCharacters.filter(value => value !== index)
+                  )
+                } else {
+                  if (MAX_CHARACTER === selectedCharacters.length) return
+                  setSelectedCharacters([...selectedCharacters, index])
+                }
+              }}
+            >
+              {character}
+            </Slot>
+          )
+        })}
+      </SloteContainer>
+      <Footer>
+        <Button
+          onClick={() => {
+            if (selectedCharacters.length === 0) return
+            if (options.onSpell)
+              options.onSpell(
+                selectedCharacters
+                  .map(index => options.slotInfos[index].character)
+                  .join('')
+              )
+            setSelectedCharacters([])
+          }}
+        >
+          Spell !!
+        </Button>
+      </Footer>
+    </Container>
   )
 }
 

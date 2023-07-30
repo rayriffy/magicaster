@@ -24,6 +24,7 @@ const Button = styled.div<{ color?: ButtonColor }>`
   justify-content: center;
   width: max-content;
   transition: 0.6s;
+  color: white;
 `
 
 export default Button

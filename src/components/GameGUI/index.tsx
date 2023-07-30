@@ -15,8 +15,12 @@ import WordOrderingGUI, {
   Options as WordOrderingGUIOptions,
 } from './WordOrderingGUI'
 
+import { Options as GameHeaderDisplayerOptions } from './GameHeaderDisplayer'
+
 import { GameDisplayRenderer, RenderManager } from '../../graphic/renderer'
 import { CHARACTER_COLOR_LIST } from './const'
+import GameHeaderDisplayer from './GameHeaderDisplayer'
+import GameGraphicDisplayer from './GameGraphicDisplayer'
 
 type GameGUIProps =
   | {
@@ -29,7 +33,7 @@ type GameGUIProps =
     }
   | {
       mode: WordOrderingGUIMode
-      options: WordOrderingGUIOptions
+      options: WordOrderingGUIOptions & GameHeaderDisplayerOptions
     }
 
 const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
@@ -74,15 +78,21 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
     return <LobbyGUI options={options} />
   }
 
-  if (mode === 'WORD_ORDERING') {
-    return (
-      <WordOrderingGUI
-        gameDisplayRenderer={gameDisplayRendererRef.current}
+  return (
+    <>
+      <GameHeaderDisplayer
         renderManager={renderManagerRef.current}
-        options={options}
+        options={{
+          score: options.score,
+          deadline: options.deadline,
+        }}
       />
-    )
-  }
+      <GameGraphicDisplayer
+        gameDisplayRenderer={gameDisplayRendererRef.current}
+      />
+      {mode === 'WORD_ORDERING' && <WordOrderingGUI options={options} />}
+    </>
+  )
 
   return null
 }
