@@ -25,13 +25,17 @@ import PlanningGUI, {
   Options as PlanningGUIOptions,
 } from './PlanningGUI'
 
+import ActivationGUI, {
+  MODE as ActivationGUIMode,
+  Options as ActivationGUIOptions,
+} from './ActivationGUI'
+
 import { Options as GameHeaderDisplayerOptions } from './GameHeaderDisplayer'
 
 import { GameDisplayRenderer, RenderManager } from '../../graphic/renderer'
 import { CHARACTER_COLOR_LIST } from './const'
 import GameHeaderDisplayer from './GameHeaderDisplayer'
 import GameGraphicDisplayer from './GameGraphicDisplayer'
-import EffectQueueRenderer from '../../graphic/renderer/effectQueueRenderer'
 import BurnSlotEffect from '../../graphic/renderer/effects/burnSlotEffect'
 
 type GameGUIProps =
@@ -54,6 +58,10 @@ type GameGUIProps =
   | {
       mode: PlanningGUIMode
       options: PlanningGUIOptions & GameHeaderDisplayerOptions
+    }
+  | {
+      mode: ActivationGUIMode
+      options: ActivationGUIOptions & GameHeaderDisplayerOptions
     }
 
 const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
@@ -121,6 +129,7 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
           options={options}
         />
       )}
+      {mode === 'ACTIVATION_GUI' && <ActivationGUI options={options} />}
     </>
   )
 
