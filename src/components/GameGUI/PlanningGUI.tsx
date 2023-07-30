@@ -102,14 +102,14 @@ const PlanningGUI: React.FC<Props> = ({ renderManager, options }) => {
         {options.cardIds.map((cardId, index) => (
           <Card
             onClick={() => {
-              if (selectedCards.includes(index)) return
+              // if (selectedCards.includes(index)) return
               setViewInfoCard(index)
             }}
             src={`./cards/${cardId}.png`}
             key={`card_${index}`}
-            style={{
-              opacity: selectedCards.includes(index) ? 0.5 : 1,
-            }}
+            // style={{
+            //   opacity: selectedCards.includes(index) ? 0.5 : 1,
+            // }}
           />
         ))}
       </ScrollableDiv>
