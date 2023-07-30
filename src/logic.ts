@@ -1,13 +1,18 @@
+import { cards } from './constants/cards'
+
 import type { Player } from './@types/Player'
 import type { RuneClient } from 'rune-games-sdk/multiplayer'
-import { cards } from './constants/cards'
-import dayjs, { Dayjs } from 'dayjs'
 
 export interface GameState {
   turn: number
   state: 'start' | 'end'
   phase: 'build_word' | 'show_score' | 'planning' | 'activation'
   phaseEndAt: string
+  cardPool: {
+    id: string
+    from: string
+    to: string
+  }[]
   players: {
     [key: string]: Player
   }
@@ -18,6 +23,8 @@ type GameActions = {
   setReady(ready: boolean): void
   startGame: (time: string) => void
   submitWord: (word: string) => void
+  applyCard: (params: { id: string; from: string; to: string }) => void
+  activate: () => void
   nextPhase: (params: {
     targetPhase: GameState['phase']
     endAt: string
@@ -36,6 +43,7 @@ Rune.initLogic({
       turn: 0,
       state: 'end',
       phase: 'activation',
+      cardPool: [],
       phaseEndAt: new Date().toISOString(),
       players: Object.fromEntries(
         playerIds.map(id => [
@@ -57,6 +65,39 @@ Rune.initLogic({
     }
   },
   actions: {
+    applyCard: (card, { game, playerId }) => {
+      game.cardPool.push({
+        id: card.id,
+        from: playerId,
+        to: card.to,
+      })
+    },
+    activate: (_, { game, playerId }) => {
+      // reset player stat to default before apply new cards
+      game.players[playerId].stat = {
+        ...game.players[playerId].stat,
+        alphabetInventorySize: 16,
+        cardPlayableSize: 4,
+        luck: 1.0,
+      }
+
+      let affedtedCards = game.cardPool
+        .filter(o => o.to === playerId)
+        .map(card => cards.find(c => c.id === card.id)!)
+
+      for (const card of affedtedCards) {
+        let affectedFields = Object.keys(
+          card.effect
+        ) as (keyof Player['stat'])[]
+        for (const feild of affectedFields) {
+          // @ts-ignore
+          game.players[playerId].stat[feild] = card.effect[feild](
+            // @ts-ignore
+            game.players[playerId].stat[feild]
+          )
+        }
+      }
+    },
     startGame: (time, { game, playerId }) => {
       game.state = 'start'
       game.turn = 1
@@ -100,6 +141,7 @@ Rune.initLogic({
       game.phaseEndAt = endAt
 
       if (targetPhase === 'build_word') {
+        game.cardPool = []
         if (game.turn < 5) game.turn += 1
         else Rune.gameOver()
       }

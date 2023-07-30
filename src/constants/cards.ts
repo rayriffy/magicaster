@@ -2,40 +2,63 @@ import { Card } from '../@types/Card'
 
 export const cards: Card[] = [
   {
-    id: 'burn-slot-effect',
-    name: 'Burn Slot',
-    description: 'Reduce target player alphabet slot by 2-4',
+    id: 'reduce-alphabet-effect',
+    name: 'Letter Slots Burner',
+    description:
+      "Destroy 2 - 4 alphabetical slots on the other player's side in the upcoming round",
     effect: {
       alphabetInventorySize: size =>
-        size <= 8
-          ? size
-          : size - Math.floor((Math.random() * 1000000000) % 3) - 2,
+        size <= 8 ? size : size - Math.floor(Math.random() * 3) - 2,
     },
   },
   {
-    id: 'reduce-card-slot-effect',
-    name: 'Reduce Card',
-    description: 'Reduce target player card slot by 1',
+    id: 'buff-alphabet-effect',
+    name: 'Letter Slots Expansion',
+    description:
+      'Increase 2 - 4 alphabetical slots on the your side in the upcoming round',
     effect: {
-      cardPlayableSize: size => (size <= 2 ? size : size - 1),
+      alphabetInventorySize: size =>
+        size <= 8 ? size : size - Math.floor(Math.random() * 3) - 2,
+    },
+  },
+  {
+    id: 'reduce-card-effect',
+    name: 'Card Slots Burner',
+    description:
+      "Destroy 1 - 2 card slots on other player's side after the end of the upcoming round",
+    effect: {
+      cardPlayableSize: size =>
+        size >= 2 ? size : size - (Math.floor(Math.random() * 2) + 1),
+    },
+  },
+  {
+    id: 'buff-card-effect',
+    name: 'Card Slots Expansion',
+    description:
+      'Increase 1 - 2 card slots on your side after the end of the upcoming round',
+    effect: {
+      cardPlayableSize: size =>
+        size >= 6 ? size : size + (Math.floor(Math.random() * 2) + 1),
     },
   },
   {
     id: 'reduce-score-effect',
-    name: 'Reduce Score',
-    description: 'Reduce target player score by 5-10%',
+    name: 'Chaos Charm',
+    description:
+      "Activate this card to randomly cut down other player's score by 5 - 20% in the upcoming round",
     effect: {
       score: score =>
-        (score * (100 - (Math.floor((Math.random() * 1000000000) % 6) + 5))) /
-        100,
+        (score * (100 - (Math.floor(Math.random() * 2) + 1))) / 100,
     },
   },
   {
-    id: 'score-buff-effect',
-    name: 'Score buff',
-    description: 'Score +20%',
+    id: 'buff-score-effect',
+    name: "Fortune's Favor",
+    description:
+      'Activate this card to randomly boost your score by 5 - 20% in the upcoming round',
     effect: {
-      score: score => score * 1.2,
+      score: score =>
+        (score * (100 + (Math.floor(Math.random() * 16) + 5))) / 100,
     },
   },
 ]

@@ -5,7 +5,6 @@ import * as graphicAssets from './graphic/assets/index.ts'
 import { useRune } from './functions/useRune.ts'
 import { SlotInfo } from './components/GameGUI/WordOrderingGUI.tsx'
 import { useTimer } from './functions/useTimer.ts'
-import { CSSChar } from './components/CSSChar.tsx'
 
 function App() {
   const { game, player, playerId } = useRune()
@@ -90,7 +89,9 @@ function App() {
                 ),
                 isDisable: false,
               })),
-            onSpell: Rune.actions.submitWord,
+            onSpell: word => {
+              Rune.actions.submitWord(word)
+            },
           }}
         />
       ) : game.state === 'start' && game.phase === 'show_score' ? (
