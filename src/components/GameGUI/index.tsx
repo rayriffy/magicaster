@@ -117,10 +117,8 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
       {mode === 'RANK_DISPLAY' && <RankDisplayGUI options={options} />}
       {mode === 'PLANNING_GUI' && (
         <PlanningGUI
-          options={{
-            playerInfos: [],
-            cardIds: [],
-          }}
+          renderManager={renderManagerRef.current}
+          options={options}
         />
       )}
     </>
