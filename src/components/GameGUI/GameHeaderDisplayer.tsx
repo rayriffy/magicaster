@@ -4,14 +4,10 @@ import { RenderManager } from '../../graphic/renderer'
 import Paragraph from '../Paragraph'
 import Title from '../Title'
 import { Renderer } from '../../graphic/renderer/types'
+import { useRune } from '../../functions/useRune'
 
-export type Options = {
-  score: number
-  deadline: number
-}
 export type Props = {
   renderManager: RenderManager
-  options: Options
 }
 
 const Header = styled.div`
@@ -55,15 +51,15 @@ class TimerRenderer implements Renderer {
 
 const GameHeaderDisplayer: React.FC<React.PropsWithChildren<Props>> = ({
   renderManager,
-  options,
 }) => {
-  const { score, deadline } = options
+  const { player, game } = useRune()
+
   const timerRef = useRef<HTMLDivElement | null>(null)
   const timerRendererRef = useRef<TimerRenderer | null>(null)
 
   useEffect(() => {
     if (timerRef.current == null) return
-    const timerRenderer = new TimerRenderer(timerRef.current, deadline)
+    const timerRenderer = new TimerRenderer(timerRef.current, game!.phaseEndAt)
     renderManager.addRenderer(timerRenderer)
     timerRendererRef.current = timerRenderer
     return () => renderManager.removeRenderer(timerRenderer)
@@ -71,12 +67,12 @@ const GameHeaderDisplayer: React.FC<React.PropsWithChildren<Props>> = ({
 
   useEffect(() => {
     if (timerRendererRef.current == null) return
-    timerRendererRef.current.setDeadline(deadline)
-  }, [deadline])
+    timerRendererRef.current.setDeadline(game!.phaseEndAt)
+  }, [game!.phaseEndAt])
 
   return (
     <Header>
-      <Paragraph>SCORE: {score.toFixed(2) ?? 0}</Paragraph>
+      <Paragraph>SCORE: {player!.stat.score.toFixed(2) ?? 0}</Paragraph>
       <Title>
         <div ref={timerRef}></div>
       </Title>

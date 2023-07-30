@@ -1,7 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useMemo } from 'react'
 import styled from 'styled-components'
 import Button from '../Button'
 import CardNumberIcon from '../CardNumberIcon'
+import { useRune } from '../../functions/useRune'
+import { randomCharArray } from '../../functions/randomCharacter'
 
 export type MODE = 'WORD_ORDERING'
 
@@ -12,8 +14,6 @@ export type SlotInfo = {
 }
 
 export type Options = {
-  slotInfos: SlotInfo[]
-  cardNumber: number
   onSpell?: (word: string) => void
 }
 
@@ -99,6 +99,20 @@ const WordOrderingGUI: React.FC<Props> = ({ options }) => {
   const [width, setWidth] = useState<number>(0)
   const [selectedCharacters, setSelectedCharacters] = useState<number[]>([])
 
+  const { player } = useRune()
+
+  const slotInfos = useMemo(
+    () =>
+      randomCharArray([], 2, player!.stat.alphabetInventorySize).map(
+        (c, i) => ({
+          id: `slot-${i}-${c}`,
+          character: c,
+          isDisable: false,
+        })
+      ),
+    [player!.stat.alphabetInventorySize, player!.stat.score]
+  )
+
   useEffect(() => {
     if (containerRef.current === null) return
     const newWidth = containerRef.current?.getBoundingClientRect().width
@@ -109,7 +123,7 @@ const WordOrderingGUI: React.FC<Props> = ({ options }) => {
   return (
     <Container>
       <CardNumberIconContainer>
-        <CardNumberIcon number={options.cardNumber} />
+        <CardNumberIcon number={player!.stat.cardInventory.length} />
       </CardNumberIconContainer>
       <WordPreviewContainer>
         <WordContainer>
@@ -118,13 +132,13 @@ const WordOrderingGUI: React.FC<Props> = ({ options }) => {
             ...Array(MAX_CHARACTER - selectedCharacters.length).fill(-1),
           ].map((charIndex, index) => (
             <div key={`preview-character-${index}`}>
-              {charIndex === -1 ? '_' : options.slotInfos[charIndex].character}
+              {charIndex === -1 ? '_' : slotInfos[charIndex].character}
             </div>
           ))}
         </WordContainer>
       </WordPreviewContainer>
       <SloteContainer ref={containerRef} columnNumber={SLOT_COLUMS}>
-        {options.slotInfos.map(({ id, character, isDisable }, index) => {
+        {slotInfos.map(({ id, character, isDisable }, index) => {
           const isSelected = selectedCharacters.includes(index)
           return (
             <Slot
@@ -155,7 +169,7 @@ const WordOrderingGUI: React.FC<Props> = ({ options }) => {
             if (options.onSpell)
               options.onSpell(
                 selectedCharacters
-                  .map(index => options.slotInfos[index].character)
+                  .map(index => slotInfos[index].character)
                   .join('')
               )
             setSelectedCharacters([])

@@ -3,12 +3,8 @@ import GameGUI from './components/GameGUI'
 import './App.css'
 import * as graphicAssets from './graphic/assets/index.ts'
 import { useRune } from './functions/useRune.ts'
-import { SlotInfo } from './components/GameGUI/WordOrderingGUI.tsx'
 import { useTimer } from './functions/useTimer.ts'
-import {
-  randomCharArray,
-  randomCharacter,
-} from './functions/randomCharacter.ts'
+import { randomCharArray } from './functions/randomCharacter.ts'
 
 function App() {
   const { game, player, playerId } = useRune()
@@ -45,19 +41,6 @@ function App() {
         <GameGUI
           mode="LOBBY_GUI"
           options={{
-            characterIndex: Object.fromEntries(
-              Object.entries(game.players).map(([playerID, { avatar }]) => [
-                playerID,
-                avatar ?? 0,
-              ])
-            ),
-            playerScore: Object.fromEntries(
-              Object.entries(game.players).map(([playerID, { stat }]) => [
-                playerID,
-                stat.score,
-              ])
-            ),
-            currentPlayerID: playerId,
             playerID: playerId,
             playerLobbyInfos: Object.entries(game.players)
               .filter(([_, player]) => player.avatar !== null)
@@ -76,19 +59,6 @@ function App() {
         <GameGUI
           mode="LOBBY_GUI"
           options={{
-            characterIndex: Object.fromEntries(
-              Object.entries(game.players).map(([playerID, { avatar }]) => [
-                playerID,
-                avatar ?? 0,
-              ])
-            ),
-            playerScore: Object.fromEntries(
-              Object.entries(game.players).map(([playerID, { stat }]) => [
-                playerID,
-                stat.score,
-              ])
-            ),
-            currentPlayerID: playerId,
             playerID: playerId,
             playerLobbyInfos: Object.entries(game.players)
               .filter(([_, player]) => player.avatar !== null)
@@ -107,31 +77,6 @@ function App() {
         <GameGUI
           mode="WORD_ORDERING"
           options={{
-            characterIndex: Object.fromEntries(
-              Object.entries(game.players).map(([playerID, { avatar }]) => [
-                playerID,
-                avatar ?? 0,
-              ])
-            ),
-            playerScore: Object.fromEntries(
-              Object.entries(game.players).map(([playerID, { stat }]) => [
-                playerID,
-                stat.score,
-              ])
-            ),
-            currentPlayerID: playerId,
-            deadline: game.phaseEndAt,
-            score: player!.stat.score,
-            cardNumber: player!.stat.cardInventory.length,
-            slotInfos: randomCharArray(
-              [],
-              2,
-              player!.stat.alphabetInventorySize
-            ).map((c, i) => ({
-              id: `slot-${i}-${c}`,
-              character: c,
-              isDisable: false,
-            })),
             onSpell: word => {
               Rune.actions.submitWord(word)
             },
@@ -141,21 +86,6 @@ function App() {
         <GameGUI
           mode="RANK_DISPLAY"
           options={{
-            characterIndex: Object.fromEntries(
-              Object.entries(game.players).map(([playerID, { avatar }]) => [
-                playerID,
-                avatar ?? 0,
-              ])
-            ),
-            playerScore: Object.fromEntries(
-              Object.entries(game.players).map(([playerID, { stat }]) => [
-                playerID,
-                stat.score,
-              ])
-            ),
-            currentPlayerID: playerId,
-            deadline: game.phaseEndAt,
-            score: player!.stat.score,
             playerRankInfos: Object.entries(game.players)
               .filter(([_, player]) => player.ready)
               .map(([id, player]) => ({
@@ -175,22 +105,7 @@ function App() {
         <GameGUI
           mode="PLANNING_GUI"
           options={{
-            characterIndex: Object.fromEntries(
-              Object.entries(game.players).map(([playerID, { avatar }]) => [
-                playerID,
-                avatar ?? 0,
-              ])
-            ),
-            playerScore: Object.fromEntries(
-              Object.entries(game.players).map(([playerID, { stat }]) => [
-                playerID,
-                stat.score,
-              ])
-            ),
-            currentPlayerID: playerId,
             maxSlot: player!.stat.cardPlayableSize,
-            deadline: game.phaseEndAt,
-            score: player!.stat.score,
             playerInfos: Object.entries(game.players)
               .filter(([_, player]) => player.ready)
               .map(([id, player]) => ({
@@ -205,8 +120,6 @@ function App() {
         <GameGUI
           mode="ACTIVATION_GUI"
           options={{
-            deadline: game.phaseEndAt,
-            score: player!.stat.score,
             cardPool: game.cardPool,
           }}
         />

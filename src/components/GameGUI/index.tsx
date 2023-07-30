@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 
 import ChooseCharacterGUI, {
   MODE as ChooseCharacterGUIMode,
@@ -30,8 +30,6 @@ import ActivationGUI, {
   Options as ActivationGUIOptions,
 } from './ActivationGUI'
 
-import { Options as GameHeaderDisplayerOptions } from './GameHeaderDisplayer'
-
 import { GameDisplayRenderer, RenderManager } from '../../graphic/renderer'
 import { CHARACTER_COLOR_LIST } from './const'
 import GameHeaderDisplayer from './GameHeaderDisplayer'
@@ -41,12 +39,7 @@ import ReduceManaSlotEffect from '../../graphic/renderer/effects/reduceManaEffec
 import ScoreBuffEffect from '../../graphic/renderer/effects/scoreBuffEffect'
 import ShieldEffect from '../../graphic/renderer/effects/shieldEffect'
 import ReduceScoreEffect from '../../graphic/renderer/effects/reduceScoreEffect'
-
-type OverAllInfo = {
-  characterIndex: { [playerID: string]: number }
-  currentPlayerID: string
-  playerScore: { [playerID: string]: number }
-}
+import { useRune } from '../../functions/useRune'
 
 type GameGUIProps =
   | {
@@ -55,28 +48,53 @@ type GameGUIProps =
     }
   | {
       mode: LobbyGUIMode
-      options: LobbyGUIOptions & OverAllInfo
+      options: LobbyGUIOptions
     }
   | {
       mode: WordOrderingGUIMode
-      options: WordOrderingGUIOptions & GameHeaderDisplayerOptions & OverAllInfo
+      options: WordOrderingGUIOptions
     }
   | {
       mode: RankDisplayGUIMode
-      options: RankDisplayGUIOptions & GameHeaderDisplayerOptions & OverAllInfo
+      options: RankDisplayGUIOptions
     }
   | {
       mode: PlanningGUIMode
-      options: PlanningGUIOptions & GameHeaderDisplayerOptions & OverAllInfo
+      options: PlanningGUIOptions
     }
   | {
       mode: ActivationGUIMode
-      options: ActivationGUIOptions & GameHeaderDisplayerOptions
+      options: ActivationGUIOptions
     }
 
 const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
   const renderManagerRef = useRef<RenderManager>(new RenderManager())
   const gameDisplayRendererRef = useRef<GameDisplayRenderer | null>(null)
+
+  const { game, playerId } = useRune()
+
+  const characterIndex = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(game!.players).map(([playerID, { avatar }]) => [
+          playerID,
+          avatar ?? 0,
+        ])
+      ),
+    [game?.players]
+  )
+
+  const playerScore = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(game!.players).map(([playerID, { stat }]) => [
+          playerID,
+          stat.score,
+        ])
+      ),
+    [game?.players]
+  )
+
   useEffect(() => {
     if (
       (mode === 'LOBBY_GUI' ||
@@ -88,8 +106,8 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
       gameDisplayRendererRef.current
         .getCharacterGroupRenderer()
         .allAnimateToWithXPortions(
-          options.playerScore,
-          options.currentPlayerID,
+          playerScore,
+          playerId,
           window.innerWidth / 2
         )
     }
@@ -105,12 +123,12 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
       gameDisplayRendererRef.current = new GameDisplayRenderer({
         width: window.innerWidth,
         characterColor: Object.fromEntries(
-          Object.entries(options.characterIndex).map(([id, index]) => [
+          Object.entries(characterIndex).map(([id, index]) => [
             id,
             CHARACTER_COLOR_LIST[index],
           ])
         ),
-        forcusedCharacterID: options.currentPlayerID,
+        forcusedCharacterID: playerId,
       })
       renderManagerRef.current.addRenderer(gameDisplayRendererRef.current)
 
@@ -118,7 +136,7 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
         if (gameDisplayRendererRef.current === null) return
         const pr = gameDisplayRendererRef.current
           .getCharacterGroupRenderer()
-          .getCharacterRendererMap()[options.currentPlayerID]
+          .getCharacterRendererMap()[playerId]
 
         gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
           renderer: new BurnSlotEffect(pr, 3000),
@@ -181,13 +199,7 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
 
   return (
     <>
-      <GameHeaderDisplayer
-        renderManager={renderManagerRef.current}
-        options={{
-          score: options.score,
-          deadline: options.deadline,
-        }}
-      />
+      <GameHeaderDisplayer renderManager={renderManagerRef.current} />
       <GameGraphicDisplayer
         gameDisplayRenderer={gameDisplayRendererRef.current}
       />
