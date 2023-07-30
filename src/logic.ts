@@ -23,7 +23,7 @@ type GameActions = {
   setReady(ready: boolean): void
   startGame: (time: number) => void
   submitWord: (word: string) => void
-  applyCard: (params: { id: string; from: string; to: string }) => void
+  applyCard: (params: { id: string; to: string }) => void
   activate: () => void
   nextPhase: (params: {
     targetPhase: GameState['phase']
