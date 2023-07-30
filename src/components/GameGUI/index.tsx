@@ -31,6 +31,8 @@ import { GameDisplayRenderer, RenderManager } from '../../graphic/renderer'
 import { CHARACTER_COLOR_LIST } from './const'
 import GameHeaderDisplayer from './GameHeaderDisplayer'
 import GameGraphicDisplayer from './GameGraphicDisplayer'
+import EffectQueueRenderer from '../../graphic/renderer/effectQueueRenderer'
+import BurnSlotEffect from '../../graphic/renderer/effects/burnSlotEffect'
 
 type GameGUIProps =
   | {
@@ -67,18 +69,18 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
   useEffect(() => {
     renderManagerRef.current.start()
     renderManagerRef.current.addRenderer(gameDisplayRendererRef.current)
+
     setTimeout(() => {
-      gameDisplayRendererRef.current.animatePosition('RUNNING')
-    }, 2000)
-    setTimeout(() => {
-      gameDisplayRendererRef.current.characterScore =
-        gameDisplayRendererRef.current.characterScore.map(() =>
-          Math.floor(Math.random() * 300)
-        )
-      gameDisplayRendererRef.current.animatePosition('RUNNING')
-    }, 4000)
-    setTimeout(() => {
-      gameDisplayRendererRef.current.animatePosition('END')
+      console.log('add effect')
+
+      const pr = gameDisplayRendererRef.current
+        .getCharacterGroupRenderer()
+        .getCharacterRendererList()[0]
+      gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
+        renderer: new BurnSlotEffect(pr, 5000),
+        onStart: () => console.log('start'),
+        onSuccess: () => console.log('success'),
+      })
     }, 8000)
     return () => {
       renderManagerRef.current.stop()

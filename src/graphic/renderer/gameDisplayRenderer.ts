@@ -82,6 +82,10 @@ class GameDisplayRenderer implements Renderer {
     }
   }
 
+  getCharacterGroupRenderer = (): CharacterGroupRenderer => {
+    return this.characterGroupRenderer
+  }
+
   getEffectQueueRenderer = (): EffectQueueRenderer => {
     return this.effectQueueRenderer
   }
@@ -89,6 +93,7 @@ class GameDisplayRenderer implements Renderer {
   loop = (delta: number) => {
     this.trackRenderer.loop(delta)
     this.characterGroupRenderer.loop(delta)
+    this.effectQueueRenderer.loop(delta)
     this.app.render()
   }
 
