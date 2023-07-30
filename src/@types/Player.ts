@@ -1,7 +1,8 @@
 export interface Player {
-  id: string
   score: number
+  avatar: number | null
   phaseCompleted: boolean
+  ready: boolean
   stat: {
     alphabetInventorySize: number
     cardInventorySize: number

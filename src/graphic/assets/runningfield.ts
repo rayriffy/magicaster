@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-import trackSpritePath from '../../assets/sprites/track.png'
+import trackSpritePath from '../../assets/sprites/runningfield.png'
 
 export const bundle: PIXI.ResolverBundle = {
   name: 'track',

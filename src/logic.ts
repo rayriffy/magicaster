@@ -5,11 +5,15 @@ export interface GameState {
   turn: number
   state: 'start' | 'end'
   phase: 'build_word' | 'show_score' | 'planning' | 'activation' | 'review'
-  players: Player[]
+  players: {
+    [key: string]: Player
+  }
 }
 
 type GameActions = {
-  // nextPhase: () => void
+  setCharacter(targetId: number): void
+  setReady(ready: boolean): void
+  startGame: () => void
 }
 
 declare global {
@@ -24,36 +28,55 @@ Rune.initLogic({
       turn: 0,
       state: 'end',
       phase: 'review',
-      players: playerIds.map(id => ({
-        id: id,
-        score: 0,
-        phaseCompleted: false,
-        stat: {
-          alphabetInventorySize: 16,
-          cardInventorySize: 4,
-          luck: 1.0,
-        },
-      })),
+      players: Object.fromEntries(
+        playerIds.map(id => [
+          id,
+          {
+            score: 0,
+            avatar: null,
+            phaseCompleted: false,
+            ready: false,
+            stat: {
+              alphabetInventorySize: 16,
+              cardInventorySize: 4,
+              luck: 1.0,
+            },
+          },
+        ])
+      ),
     }
   },
-  actions: {},
+  actions: {
+    startGame: (_, { game }) => {
+      game.state = 'start'
+      game.turn = 1
+      game.phase = 'build_word'
+    },
+    setCharacter: (targetId, { game, playerId }) => {
+      game.players[playerId].avatar = targetId
+    },
+    setReady: (ready, { game, playerId }) => {
+      game.players[playerId].ready = ready
+    },
+  },
   events: {
-    playerJoined: (playerId, ctx) => {
+    playerJoined: (playerId, { game }) => {
       // Handle player joined
-      ctx.game.players.push({
-        id: playerId,
+      game.players[playerId] = {
         score: 0,
+        avatar: null,
         phaseCompleted: false,
+        ready: false,
         stat: {
           alphabetInventorySize: 16,
           cardInventorySize: 4,
           luck: 1.0,
         },
-      })
+      }
     },
-    playerLeft(playerId, ctx) {
+    playerLeft(playerId, { game }) {
       // Handle player left
-      ctx.game.players = ctx.game.players.filter(p => p.id !== playerId)
+      delete game.players[playerId]
     },
   },
 })

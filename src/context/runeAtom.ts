@@ -2,7 +2,7 @@ import { atom, onMount } from 'nanostores'
 import { GameState } from '../logic'
 
 export const runeAtom = atom<GameState | undefined>(undefined)
-export const playerIdAtom = atom<string | undefined>(undefined)
+export const playerIdAtom = atom<string>('')
 
 onMount(runeAtom, () => {
   if (typeof window === 'undefined') return
@@ -11,7 +11,7 @@ onMount(runeAtom, () => {
 
   Rune.initClient({
     onChange: ({ newGame, yourPlayerId }) => {
-      if (unmounted) return
+      if (unmounted || !yourPlayerId) return
       runeAtom.set(newGame)
       playerIdAtom.set(yourPlayerId)
     },

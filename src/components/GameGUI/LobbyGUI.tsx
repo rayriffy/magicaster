@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import Container from '../Container'
 import Title from '../Title'
 import Button from '../Button'
@@ -52,10 +52,14 @@ const StatusCapsule = styled.div<{ backgroundColor: string }>`
 `
 
 const LobbyGUI: React.FC<Props> = ({ options }) => {
-  let isReady = false
-  for (const info of options.playerLobbyInfos) {
-    if (info.isReady && options.playerID === info.playerID) isReady = true
-  }
+  const isReady = useMemo(
+    () =>
+      options.playerLobbyInfos.find(
+        playerInfo => playerInfo.playerID === options.playerID
+      )?.isReady || false,
+    [options.playerLobbyInfos, options.playerID]
+  )
+
   return (
     <Container style={{ minHeight: '100%' }}>
       <Arranger>
@@ -67,7 +71,7 @@ const LobbyGUI: React.FC<Props> = ({ options }) => {
                 <StatusCapsule
                   backgroundColor={info.isReady ? '#51D94F' : '#D94F4F'}
                 >
-                  {info.isReady ? 'Ready' : 'Cancel'}
+                  {info.isReady ? 'Ready' : 'Not ready'}
                 </StatusCapsule>
               </PlayerBoardRow>
             )
@@ -76,13 +80,13 @@ const LobbyGUI: React.FC<Props> = ({ options }) => {
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <Button
             style={{ margin: '30px 0px' }}
-            color={isReady ? 'primary' : 'danger'}
+            color={!isReady ? 'primary' : 'danger'}
             onClick={() => {
               if (isReady && options.onCancel) options.onCancel()
               if (!isReady && options.onReady) options.onReady()
             }}
           >
-            <Paragraph>{isReady ? 'Ready' : 'Not ready'}</Paragraph>
+            <Paragraph>{!isReady ? 'Ready' : 'Cancel'}</Paragraph>
           </Button>
         </div>
       </Arranger>

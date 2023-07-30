@@ -43,7 +43,7 @@ const PlayerBoardRow: React.FC<React.PropsWithChildren<Props>> = ({
       <Avatar url={avatarUrl} />
       <InfoLayout>
         <div>
-          <Paragraph style={{ fontWeight: 'bold' }}>{name}</Paragraph>
+          <Paragraph className='line-clamp-1' style={{ fontWeight: 'bold' }}>{name}</Paragraph>
         </div>
         <div>{children}</div>
       </InfoLayout>

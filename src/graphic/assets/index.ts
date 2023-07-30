@@ -6,7 +6,7 @@ import {
 import {
   bundle as trackBundle,
   getSpritesheet as getTrackSpritesheet,
-} from './track'
+} from './runningfield'
 import {
   bundle as effectBundle,
   getEffectSpritesheets,

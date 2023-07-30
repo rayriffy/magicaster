@@ -14,8 +14,7 @@ export type characterSelections = { [playerID: string]: number }
 export type Options = {
   playerID: string
   characterSelections: characterSelections
-  onSelect?: (index: number) => void
-  onSubmit?: () => void
+  onSubmit?: (index: number) => void
 }
 export type Props = {
   options: Options
@@ -42,7 +41,7 @@ const Arranger = styled.div`
 `
 
 const ChooseCharacterGUI: React.FC<Props> = ({ renderManager, options }) => {
-  const characterIndex = options.characterSelections[options.playerID] ?? 0
+  const [currentSelectedId, setCurrentSelectedId] = React.useState<number>(0)
 
   return (
     <Container>
@@ -51,7 +50,7 @@ const ChooseCharacterGUI: React.FC<Props> = ({ renderManager, options }) => {
         <PreviewCharacterDisplayerContainer>
           <CharacterDisplayer
             renderManager={renderManager}
-            characterIndex={characterIndex}
+            characterIndex={currentSelectedId}
           />
         </PreviewCharacterDisplayerContainer>
         <CharacterDisplayersContainer>
@@ -62,7 +61,7 @@ const ChooseCharacterGUI: React.FC<Props> = ({ renderManager, options }) => {
                 options.characterSelections
               ).includes(index)
 
-              const isMySelect = index === characterIndex
+              const isMySelect = index === currentSelectedId
               return (
                 <CharacterDisplayer
                   key={index}
@@ -71,7 +70,8 @@ const ChooseCharacterGUI: React.FC<Props> = ({ renderManager, options }) => {
                   disabled={isSelected && !isMySelect}
                   onClick={() => {
                     if (isSelected) return
-                    if (options.onSelect) options.onSelect(index)
+                    setCurrentSelectedId(index)
+                    // if (options.onSelect) options.onSelect(index)
                   }}
                   isHighLight={isMySelect}
                 />
@@ -79,7 +79,10 @@ const ChooseCharacterGUI: React.FC<Props> = ({ renderManager, options }) => {
             })}
         </CharacterDisplayersContainer>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Button style={{ margin: '30px 0px' }} onClick={options.onSubmit}>
+          <Button
+            style={{ margin: '30px 0px' }}
+            onClick={() => options.onSubmit?.(currentSelectedId)}
+          >
             <Paragraph>Join the room</Paragraph>
           </Button>
         </div>
