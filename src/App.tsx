@@ -4,8 +4,6 @@ import './App.css'
 import * as graphicAssets from './graphic/assets/index.ts'
 import { useRune } from './functions/useRune.ts'
 
-import { GameState } from './logic.ts'
-
 function App() {
   const { game, player, playerId } = useRune()
   const [loadingAssets, setLoadingAssets] = useState<boolean>(true)
@@ -60,7 +58,12 @@ function App() {
   }
 
   // BEBUG: WOR
-  return <GameGUI mode="WORD_ORDERING" options={{}} />
+  return (
+    <GameGUI
+      mode="WORD_ORDERING"
+      options={{ deadline: Date.now() + 1000 * 120, score: 100 }}
+    />
+  )
 }
 
 export default App

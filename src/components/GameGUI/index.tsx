@@ -78,7 +78,8 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
     return (
       <WordOrderingGUI
         gameDisplayRenderer={gameDisplayRendererRef.current}
-        options={{}}
+        renderManager={renderManagerRef.current}
+        options={options}
       />
     )
   }
