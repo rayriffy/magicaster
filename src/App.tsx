@@ -5,7 +5,10 @@ import * as graphicAssets from './graphic/assets/index.ts'
 import { useRune } from './functions/useRune.ts'
 import { SlotInfo } from './components/GameGUI/WordOrderingGUI.tsx'
 import { useTimer } from './functions/useTimer.ts'
-import { randomCharacter } from './functions/randomCharacter.ts'
+import {
+  randomCharArray,
+  randomCharacter,
+} from './functions/randomCharacter.ts'
 
 function App() {
   const { game, player, playerId } = useRune()
@@ -102,11 +105,13 @@ function App() {
             deadline: game.phaseEndAt,
             score: player!.stat.score,
             cardNumber: player!.stat.cardInventory.length,
-            slotInfos: Array.from({
-              length: player!.stat.alphabetInventorySize,
-            }).map<SlotInfo>((_, index) => ({
-              id: `slot-${index}`,
-              character: randomCharacter(),
+            slotInfos: randomCharArray(
+              [],
+              2,
+              player!.stat.alphabetInventorySize
+            ).map((c, i) => ({
+              id: `slot-${i}-${c}`,
+              character: c,
               isDisable: false,
             })),
             onSpell: word => {

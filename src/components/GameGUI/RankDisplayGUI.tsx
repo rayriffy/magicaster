@@ -50,7 +50,7 @@ const RankDisplayGUI: React.FC<Props> = ({ options }) => {
               <PlayerBoardRow key={playerID} name={name} avatarUrl={avatarURL}>
                 <CapsuleContainer>
                   <Capsule backgroundColor="#F5F92E" fontColor="#444444">
-                    SCORE: {score}
+                    SCORE: {score.toFixed(2)}
                   </Capsule>
                   <Capsule backgroundColor="#424242">
                     CARD: {cardNumber}
