@@ -48,6 +48,7 @@ function App() {
                 avatar ?? 0,
               ])
             ),
+            currentPlayerID: playerId,
             playerID: playerId,
             playerLobbyInfos: Object.entries(game.players)
               .filter(([_, player]) => player.avatar !== null)
@@ -72,6 +73,7 @@ function App() {
                 avatar ?? 0,
               ])
             ),
+            currentPlayerID: playerId,
             playerID: playerId,
             playerLobbyInfos: Object.entries(game.players)
               .filter(([_, player]) => player.avatar !== null)
@@ -96,6 +98,7 @@ function App() {
                 avatar ?? 0,
               ])
             ),
+            currentPlayerID: playerId,
             deadline: game.phaseEndAt,
             score: player!.stat.score,
             cardNumber: player!.stat.cardInventory.length,
@@ -121,6 +124,7 @@ function App() {
                 avatar ?? 0,
               ])
             ),
+            currentPlayerID: playerId,
             deadline: game.phaseEndAt,
             score: player!.stat.score,
             playerRankInfos: Object.entries(game.players)
@@ -148,6 +152,7 @@ function App() {
                 avatar ?? 0,
               ])
             ),
+            currentPlayerID: playerId,
             maxSlot: player!.stat.cardPlayableSize,
             deadline: game.phaseEndAt,
             score: player!.stat.score,

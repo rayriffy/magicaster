@@ -9,8 +9,8 @@ export type PositioningMode = 'PREPARE' | 'RUNNING' | 'END'
 
 type Params = {
   width: number
-  characterColor: CharacterColor[]
-  forcusedCharacterIndex: number
+  characterColor: { [id: string]: CharacterColor }
+  forcusedCharacterID: string
 }
 
 class GameDisplayRenderer implements Renderer {
@@ -21,23 +21,24 @@ class GameDisplayRenderer implements Renderer {
   private trackRenderer: TrackRenderer
   private characterGroupRenderer: CharacterGroupRenderer
   private effectQueueRenderer: EffectQueueRenderer
-  public characterScore: number[]
+  public characterScore: { [id: string]: number }
   public characterScoreDistanceRatio: number = 1
-  private forcusedCharacterIndex: number
+  private forcusedCharacterID: string
 
-  constructor({ width, characterColor, forcusedCharacterIndex }: Params) {
+  constructor({ width, characterColor, forcusedCharacterID }: Params) {
     const assets = getAssets()
     if (assets === null) throw "assets aren't load yet"
 
     this.app = new PIXI.Application({ backgroundAlpha: 0 })
-    console.log('DEBUG: app = ', this.app)
 
     this.width = width
     this.height = 0.6 * width
-    this.forcusedCharacterIndex = forcusedCharacterIndex
+    this.forcusedCharacterID = forcusedCharacterID
     this.app.view.width = this.width
     this.app.view.height = this.height
-    this.characterScore = Array(characterColor.length).fill(0)
+    this.characterScore = Object.fromEntries(
+      Object.entries(characterColor).map(([id]) => [id, 0])
+    )
     this.effectQueueRenderer = new EffectQueueRenderer(this.app.stage)
 
     // set up track
@@ -57,7 +58,9 @@ class GameDisplayRenderer implements Renderer {
       },
     })
 
-    for (const characterRenderer of this.characterGroupRenderer.getCharacterRendererList()) {
+    for (const characterRenderer of Object.values(
+      this.characterGroupRenderer.getCharacterRendererMap()
+    )) {
       this.app.stage.addChild(characterRenderer.getSprite())
     }
   }
@@ -68,11 +71,15 @@ class GameDisplayRenderer implements Renderer {
     }
 
     if (mode === 'RUNNING') {
+      const distanceMap = Object.fromEntries(
+        Object.entries(this.characterScore).map(([id, score]) => [
+          id,
+          score * this.characterScoreDistanceRatio,
+        ])
+      )
       this.characterGroupRenderer.allAnimateToWithXPortions(
-        this.characterScore.map(
-          value => value * this.characterScoreDistanceRatio
-        ),
-        this.forcusedCharacterIndex,
+        distanceMap,
+        this.forcusedCharacterID,
         this.width / 2
       )
     }

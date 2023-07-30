@@ -44,6 +44,7 @@ import ReduceScoreEffect from '../../graphic/renderer/effects/reduceScoreEffect'
 
 type OverAllInfo = {
   characterIndex: { [playerID: string]: number }
+  currentPlayerID: string
 }
 
 type GameGUIProps =
@@ -86,10 +87,13 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
     ) {
       gameDisplayRendererRef.current = new GameDisplayRenderer({
         width: window.innerWidth,
-        characterColor: CHARACTER_COLOR_LIST.filter((_, index) =>
-          Object.values(options.characterIndex).includes(index)
+        characterColor: Object.fromEntries(
+          Object.entries(options.characterIndex).map(([id, index]) => [
+            id,
+            CHARACTER_COLOR_LIST[index],
+          ])
         ),
-        forcusedCharacterIndex: 1,
+        forcusedCharacterID: options.currentPlayerID,
       })
       renderManagerRef.current.addRenderer(gameDisplayRendererRef.current)
 
@@ -97,7 +101,7 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
         if (gameDisplayRendererRef.current === null) return
         const pr = gameDisplayRendererRef.current
           .getCharacterGroupRenderer()
-          .getCharacterRendererList()[0]
+          .getCharacterRendererMap()[options.currentPlayerID]
 
         gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
           renderer: new BurnSlotEffect(pr, 3000),
