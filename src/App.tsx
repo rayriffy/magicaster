@@ -45,6 +45,7 @@ function App() {
         <GameGUI
           mode="LOBBY_GUI"
           options={{
+            cardPool: game.cardPool ?? [],
             characterIndex: Object.fromEntries(
               Object.entries(game.players).map(([playerID, { avatar }]) => [
                 playerID,
@@ -76,6 +77,7 @@ function App() {
         <GameGUI
           mode="LOBBY_GUI"
           options={{
+            cardPool: game.cardPool ?? [],
             characterIndex: Object.fromEntries(
               Object.entries(game.players).map(([playerID, { avatar }]) => [
                 playerID,
@@ -107,6 +109,7 @@ function App() {
         <GameGUI
           mode="WORD_ORDERING"
           options={{
+            cardPool: game.cardPool ?? [],
             characterIndex: Object.fromEntries(
               Object.entries(game.players).map(([playerID, { avatar }]) => [
                 playerID,
@@ -141,6 +144,7 @@ function App() {
         <GameGUI
           mode="RANK_DISPLAY"
           options={{
+            cardPool: game.cardPool ?? [],
             characterIndex: Object.fromEntries(
               Object.entries(game.players).map(([playerID, { avatar }]) => [
                 playerID,
@@ -175,6 +179,7 @@ function App() {
         <GameGUI
           mode="PLANNING_GUI"
           options={{
+            cardPool: game.cardPool ?? [],
             characterIndex: Object.fromEntries(
               Object.entries(game.players).map(([playerID, { avatar }]) => [
                 playerID,
@@ -205,9 +210,22 @@ function App() {
         <GameGUI
           mode="ACTIVATION_GUI"
           options={{
+            cardPool: game.cardPool ?? [],
+            characterIndex: Object.fromEntries(
+              Object.entries(game.players).map(([playerID, { avatar }]) => [
+                playerID,
+                avatar ?? 0,
+              ])
+            ),
+            playerScore: Object.fromEntries(
+              Object.entries(game.players).map(([playerID, { stat }]) => [
+                playerID,
+                stat.score,
+              ])
+            ),
+            currentPlayerID: playerId,
             deadline: game.phaseEndAt,
             score: player!.stat.score,
-            cardPool: game.cardPool,
           }}
         />
       ) : (
