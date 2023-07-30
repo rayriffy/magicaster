@@ -6,6 +6,12 @@ html, body, #root {
   height: 100%;
 }
 
-#player-grid > button {
-  @apply bg-gray-100 hover:bg-gray-200 rounded-md aspect-square border uppercase;
+body {
+  padding: 0px;
+  margin: 0px;
+  height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
 }
