@@ -54,7 +54,28 @@ const Card = styled.img`
   background: green;
 `
 
+const MAX_SLOT = 3
 const PlanningGUI: React.FC<Props> = ({ options }) => {
+  const [selectedCards, setSelectedCards] = React.useState<number[]>([])
+  const [viewInfoCard, setViewInfoCard] = React.useState<number | null>(null)
+
+  const selectCard = (index: number) => {
+    if (selectedCards.length >= MAX_SLOT) {
+      return
+    }
+
+    setViewInfoCard(null)
+    setSelectedCards(cards => [...cards, index])
+  }
+
+  if (options.cardIds.length === 0) {
+    return (
+      <Title style={{ marginTop: '20px' }}>
+        Please wait for other players...
+      </Title>
+    )
+  }
+
   return (
     <>
       <Title style={{ marginTop: '20px' }}>Choose Your Cards</Title>
@@ -65,9 +86,16 @@ const PlanningGUI: React.FC<Props> = ({ options }) => {
       </CardSlotContainer>
       <ScrollableDiv>
         {options.cardIds.map((cardId, index) => (
-          <Card src={`./cards/${cardId}.png`} key={`card_${index}`} />
+          <Card
+            onClick={() => {
+              setViewInfoCard(index)
+            }}
+            src={`./cards/${cardId}.png`}
+            key={`card_${index}`}
+          />
         ))}
       </ScrollableDiv>
+      {viewInfoCard !== null && <div>Hi there eiei</div>}
     </>
   )
 }
