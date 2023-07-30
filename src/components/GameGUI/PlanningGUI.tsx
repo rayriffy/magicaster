@@ -116,12 +116,12 @@ const PlanningGUI: React.FC<Props> = ({ renderManager, options }) => {
       {viewInfoCard !== null && (
         <>
           <CharacterContainer style={{ marginTop: 15 }}>
-            {options.playerInfos.map(playerInfo => (
+            {options.playerInfos.map((playerInfo, index) => (
               <CharacterDisplayer
                 characterIndex={playerInfo.characterIndex}
                 renderManager={renderManager}
                 onClick={() => {
-                  setCharacterIndex(playerInfo.characterIndex)
+                  setCharacterIndex(index)
                 }}
               />
             ))}
