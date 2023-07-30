@@ -25,6 +25,11 @@ import PlanningGUI, {
   Options as PlanningGUIOptions,
 } from './PlanningGUI'
 
+import ActivationGUI, {
+  MODE as ActivationGUIMode,
+  Options as ActivationGUIOptions,
+} from './ActivationGUI'
+
 import { Options as GameHeaderDisplayerOptions } from './GameHeaderDisplayer'
 
 import { GameDisplayRenderer, RenderManager } from '../../graphic/renderer'
@@ -53,6 +58,10 @@ type GameGUIProps =
   | {
       mode: PlanningGUIMode
       options: PlanningGUIOptions & GameHeaderDisplayerOptions
+    }
+  | {
+      mode: ActivationGUIMode
+      options: ActivationGUIOptions & GameHeaderDisplayerOptions
     }
 
 const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
@@ -120,6 +129,7 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
           options={options}
         />
       )}
+      {mode === 'ACTIVATION_GUI' && <ActivationGUI options={options} />}
     </>
   )
 

@@ -131,6 +131,15 @@ function App() {
             cardIds: player!.stat.cardInventory,
           }}
         />
+      ) : game.state === 'start' && game.phase === 'activation' ? (
+        <GameGUI
+          mode="ACTIVATION_GUI"
+          options={{
+            deadline: game.phaseEndAt,
+            score: player!.stat.score,
+            cardPool: game.cardPool,
+          }}
+        />
       ) : (
         <p className="text-white text-center pt-12 text-2xl font-bold">
           Missing phase {game.phase}

@@ -4,16 +4,18 @@ import type { Player } from './@types/Player'
 import type { RuneClient } from 'rune-games-sdk/multiplayer'
 import { words } from './constants/words'
 
+export interface ActivatedCard {
+  id: string
+  from: string
+  to: string
+}
+
 export interface GameState {
   turn: number
   state: 'start' | 'end'
   phase: 'build_word' | 'show_score' | 'planning' | 'activation'
   phaseEndAt: number
-  cardPool: {
-    id: string
-    from: string
-    to: string
-  }[]
+  cardPool: ActivatedCard[]
   players: {
     [key: string]: Player
   }
