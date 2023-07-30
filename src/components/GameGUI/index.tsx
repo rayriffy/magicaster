@@ -45,6 +45,7 @@ import ReduceScoreEffect from '../../graphic/renderer/effects/reduceScoreEffect'
 type OverAllInfo = {
   characterIndex: { [playerID: string]: number }
   currentPlayerID: string
+  playerScore: { [playerID: string]: number }
 }
 
 type GameGUIProps =
@@ -76,7 +77,23 @@ type GameGUIProps =
 const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
   const renderManagerRef = useRef<RenderManager>(new RenderManager())
   const gameDisplayRendererRef = useRef<GameDisplayRenderer | null>(null)
-
+  useEffect(() => {
+    if (
+      (mode === 'LOBBY_GUI' ||
+        mode === 'WORD_ORDERING' ||
+        mode === 'RANK_DISPLAY' ||
+        mode === 'PLANNING_GUI') &&
+      gameDisplayRendererRef.current !== null
+    ) {
+      gameDisplayRendererRef.current
+        .getCharacterGroupRenderer()
+        .allAnimateToWithXPortions(
+          options.playerScore,
+          options.currentPlayerID,
+          window.innerWidth / 2
+        )
+    }
+  })
   useEffect(() => {
     if (
       (mode === 'LOBBY_GUI' ||
