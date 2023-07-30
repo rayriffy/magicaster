@@ -10,15 +10,15 @@ type Params = {
   animatedSprite: PIXI.AnimatedSprite
 }
 
-class animateFrameEffect implements IEffectRenderer {
+abstract class AnimateFrameEffect implements IEffectRenderer {
   private duration: number
-  private position: Vec2
+  public position: Vec2
   private animatedSprite: PIXI.AnimatedSprite
+  private startTime: number | null = null
   constructor({ duration, position, animatedSprite }: Params) {
     this.duration = duration
     this.position = position
     this.animatedSprite = animatedSprite
-    this.animatedSprite
   }
 
   getDisplayObject(): PIXI.DisplayObject {
@@ -26,8 +26,21 @@ class animateFrameEffect implements IEffectRenderer {
   }
 
   loop(delta: number): boolean {
-    return false
+    if (this.startTime === null) {
+      this.startTime = Date.now()
+      this.animatedSprite.play()
+    }
+
+    this.animatedSprite.position.set(...this.position)
+
+    if (Date.now() - this.startTime > this.duration) {
+      this.animatedSprite.stop()
+      this.animatedSprite.destroy()
+      return true
+    } else {
+      return false
+    }
   }
 }
 
-export default animateFrameEffect
+export default AnimateFrameEffect

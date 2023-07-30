@@ -182,6 +182,14 @@ class CharacterRenderer implements Renderer {
   set isDisable(value: boolean) {
     this.uniforms.uIsDisable = value
   }
+
+  getOriginPosition = (): Vec2 => {
+    return this.originPosition
+  }
+
+  getSpritePosition = (): Vec2 => {
+    return [this.sprite.position.x, this.sprite.position.y]
+  }
 }
 
 export default CharacterRenderer
