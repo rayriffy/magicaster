@@ -27,13 +27,13 @@ abstract class AnimateFrameEffect implements IEffectRenderer {
 
   loop(delta: number): boolean {
     if (this.startTime === null) {
-      this.startTime = Rune.gameTimeInSeconds()
+      this.startTime = Date.now()
       this.animatedSprite.play()
     }
 
     this.animatedSprite.position.set(...this.position)
 
-    if (Rune.gameTimeInSeconds() - this.startTime > this.duration) {
+    if (Date.now() - this.startTime > this.duration) {
       this.animatedSprite.stop()
       this.animatedSprite.destroy()
       return true
