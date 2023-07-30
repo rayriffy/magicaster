@@ -11,6 +11,7 @@ This is a game created as a part of [ReactJam 2023](https://reactjam.com/). The 
    2. **Phase 2: Review**: Review each score of every players, this will help you to plan your move on next phase
    3. **Phase 3: Planning**: Now, you will use your spelling cards in any way to gain avantage to yourself.
    4. **Phase 4: Activation**: Review all the cards you has been recieved from the others player before moving to the next turn.
+2. The game ended after 5 turns, player with the highest score wins.
 
 ## Spelling cards
 
