@@ -17,13 +17,17 @@ class animateFrameEffect implements IEffectRenderer {
   constructor({ duration, position, animatedSprite }: Params) {
     this.duration = duration
     this.position = position
+    this.animatedSprite = animatedSprite
+    this.animatedSprite
   }
 
   getDisplayObject(): PIXI.DisplayObject {
-
+    return this.animatedSprite
   }
 
-  loop(delta: number): boolean {}
+  loop(delta: number): boolean {
+    return false
+  }
 }
 
 export default animateFrameEffect
