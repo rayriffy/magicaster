@@ -93,6 +93,27 @@ function App() {
             onSpell: Rune.actions.submitWord,
           }}
         />
+      ) : game.state === 'start' && game.phase === 'show_score' ? (
+        <GameGUI
+          mode="RANK_DISPLAY"
+          options={{
+            deadline: new Date(game.phaseEndAt).getTime(),
+            score: player!.stat.score,
+            playerRankInfos: Object.entries(game.players)
+              .filter(([_, player]) => player.ready)
+              .map(([id, player]) => ({
+                playerID: id,
+                name: id,
+                avatarURL:
+                  'https://fastly.picsum.photos/id/791/100/100.jpg?hmac=WEb2YRQzOxdTKepKuaQlWqG1RNRKSAytYrC6dB3kMAY',
+
+                score: player.stat.score,
+                cardNumber: player.stat.cardInventory.length,
+              })),
+            round: game.turn,
+            totalRound: 5,
+          }}
+        />
       ) : (
         <p className="text-white text-center pt-12 text-2xl font-bold">
           Missing phase {game.phase}
@@ -100,50 +121,6 @@ function App() {
       )}
     </Fragment>
   )
-
-  // BEBUG: WORD ORDERING
-  // return (
-  //   <GameGUI
-  //     mode="WORD_ORDERING"
-  //     options={{
-  //       deadline: Date.now() + 1000 * 120,
-  //       score: 100,
-  //       cardNumber: 10,
-  //       slotInfos: Array(4 * 4)
-  //         .fill(1)
-  //         .map<SlotInfo>((_, index) => ({
-  //           id: `slot-${index}`,
-  //           character: String.fromCharCode(
-  //             65 + Math.floor((90 - 65) * Math.random())
-  //           ),
-  //           isDisable: false,
-  //         })),
-  //       onSpell: console.log,
-  //     }}
-  //   />
-
-  // return (
-  //   <GameGUI
-  //     mode="RANK_DISPLAY"
-  //     options={{
-  //       deadline: 0,
-  //       score: 100,
-  //       playerRankInfos: Object.entries(game.players)
-  //         .filter(([_, player]) => player.avatar)
-  //         .map(([id, player]) => ({
-  //           playerID: id,
-  //           name: id,
-  //           avatarURL:
-  //             'https://fastly.picsum.photos/id/791/100/100.jpg?hmac=WEb2YRQzOxdTKepKuaQlWqG1RNRKSAytYrC6dB3kMAY',
-
-  //           score: Math.floor(Math.random() * 100),
-  //           cardNumber: Math.floor(Math.random() * 10),
-  //         })),
-  //       round: 2,
-  //       totalRound: 5,
-  //     }}
-  //   />
-  // )
 }
 
 export default App
