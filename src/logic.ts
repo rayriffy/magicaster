@@ -55,7 +55,7 @@ Rune.initLogic({
             stat: {
               score: 0,
               alphabetInventorySize: 16,
-              cardPlayableSize: 4,
+              cardPlayableSize: 3,
               luck: 1.0,
               cardInventory: [],
             },
@@ -84,7 +84,7 @@ Rune.initLogic({
       game.players[playerId].stat = {
         ...game.players[playerId].stat,
         alphabetInventorySize: 16,
-        cardPlayableSize: 4,
+        cardPlayableSize: 3,
       }
 
       let affedtedCards = game.cardPool
@@ -119,7 +119,7 @@ Rune.initLogic({
       game.players[playerId].stat = {
         score: 0,
         alphabetInventorySize: 16,
-        cardPlayableSize: 4,
+        cardPlayableSize: 3,
         cardInventory: [],
       }
     },
@@ -181,7 +181,7 @@ Rune.initLogic({
         stat: {
           score: 0,
           alphabetInventorySize: 16,
-          cardPlayableSize: 4,
+          cardPlayableSize: 3,
           cardInventory: [],
         },
       }

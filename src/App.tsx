@@ -119,6 +119,7 @@ function App() {
         <GameGUI
           mode="PLANNING_GUI"
           options={{
+            maxSlot: player!.stat.cardPlayableSize,
             deadline: game.phaseEndAt,
             score: player!.stat.score,
             playerInfos: Object.entries(game.players)
