@@ -33,8 +33,7 @@ class TimerRenderer implements Renderer {
   }
 
   loop(): void {
-    const remain = Math.max(this.deadline - Date.now(), 0)
-    const remainSec = Math.floor(remain / 1000)
+    const remainSec = Math.max(this.deadline - Rune.gameTimeInSeconds(), 0)
     const remainMin = Math.floor(remainSec / 60)
     const min = Math.floor(remainMin % 60) + ''
     const sec = Math.floor(remainSec % 60) + ''

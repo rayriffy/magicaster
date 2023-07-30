@@ -11,7 +11,7 @@ export const useTimer = () => {
 
     let endedAt = game.phaseEndAt
     const interval = setInterval(() => {
-      if (endedAt > Rune.gameTimeInSeconds()) {
+      if (endedAt < Rune.gameTimeInSeconds()) {
         let targetNextPhase: GameState['phase'] =
           game.phase === 'build_word'
             ? 'show_score'
