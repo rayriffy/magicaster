@@ -4,7 +4,6 @@ import Paragraph from './Paragraph'
 
 export type Props = {
   name: string
-  playerID: string
   avatarUrl: string
 }
 
@@ -43,7 +42,9 @@ const PlayerBoardRow: React.FC<React.PropsWithChildren<Props>> = ({
       <Avatar url={avatarUrl} />
       <InfoLayout>
         <div>
-          <Paragraph className='line-clamp-1' style={{ fontWeight: 'bold' }}>{name}</Paragraph>
+          <Paragraph className="line-clamp-1" style={{ fontWeight: 'bold' }}>
+            {name}
+          </Paragraph>
         </div>
         <div>{children}</div>
       </InfoLayout>

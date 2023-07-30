@@ -6,6 +6,7 @@ import Button from '../Button'
 import styled from 'styled-components'
 import PlayerBoardRow from '../PlayerBoardRow'
 import Paragraph from '../Paragraph'
+import Capsule from '../Capsule'
 
 export type MODE = 'LOBBY_GUI'
 
@@ -40,17 +41,6 @@ const PlayerBoardContainer = styled.div`
   gap: 20px;
 `
 
-const StatusCapsule = styled.div<{ backgroundColor: string }>`
-  width: 100px;
-  height: 30px;
-  border-radius: 50px;
-  background-color: ${({ backgroundColor }) => backgroundColor};
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
 const LobbyGUI: React.FC<Props> = ({ options }) => {
   const isReady = useMemo(
     () =>
@@ -68,11 +58,9 @@ const LobbyGUI: React.FC<Props> = ({ options }) => {
           {options.playerLobbyInfos.map(info => {
             return (
               <PlayerBoardRow key={info.playerID} {...info}>
-                <StatusCapsule
-                  backgroundColor={info.isReady ? '#51D94F' : '#D94F4F'}
-                >
+                <Capsule backgroundColor={info.isReady ? '#51D94F' : '#D94F4F'}>
                   {info.isReady ? 'Ready' : 'Not ready'}
-                </StatusCapsule>
+                </Capsule>
               </PlayerBoardRow>
             )
           })}

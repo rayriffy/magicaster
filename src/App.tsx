@@ -58,24 +58,46 @@ function App() {
     )
   }
 
-  // BEBUG: WOR
+  // BEBUG: WORD ORDERING
+  // return (
+  //   <GameGUI
+  //     mode="WORD_ORDERING"
+  //     options={{
+  //       deadline: Date.now() + 1000 * 120,
+  //       score: 100,
+  //       cardNumber: 10,
+  //       slotInfos: Array(4 * 4)
+  //         .fill(1)
+  //         .map<SlotInfo>((_, index) => ({
+  //           id: `slot-${index}`,
+  //           character: String.fromCharCode(
+  //             65 + Math.floor((90 - 65) * Math.random())
+  //           ),
+  //           isDisable: false,
+  //         })),
+  //       onSpell: console.log,
+  //     }}
+  //   />
+
   return (
     <GameGUI
-      mode="WORD_ORDERING"
+      mode="RANK_DISPLAY"
       options={{
-        deadline: Date.now() + 1000 * 120,
+        deadline: 0,
         score: 100,
-        cardNumber: 10,
-        slotInfos: Array(4 * 4)
-          .fill(1)
-          .map<SlotInfo>((_, index) => ({
-            id: `slot-${index}`,
-            character: String.fromCharCode(
-              65 + Math.floor((90 - 65) * Math.random())
-            ),
-            isDisable: false,
+        playerRankInfos: Object.entries(game.players)
+          .filter(([_, player]) => player.avatar)
+          .map(([id, player]) => ({
+            playerID: id,
+            name: id,
+            avatarURL:
+              'https://fastly.picsum.photos/id/791/100/100.jpg?hmac=WEb2YRQzOxdTKepKuaQlWqG1RNRKSAytYrC6dB3kMAY',
+
+            score: Math.floor(Math.random() * 100),
+            cardNumber: Math.floor(Math.random() * 10),
           })),
-        onSpell: console.log,
+        round: 2,
+        totalRound: 5,
       }}
     />
   )

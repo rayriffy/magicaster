@@ -15,6 +15,11 @@ import WordOrderingGUI, {
   Options as WordOrderingGUIOptions,
 } from './WordOrderingGUI'
 
+import RankDisplayGUI, {
+  MODE as RankDisplayGUIMode,
+  Options as RankDisplayGUIOptions,
+} from './RankDisplayGUI'
+
 import { Options as GameHeaderDisplayerOptions } from './GameHeaderDisplayer'
 
 import { GameDisplayRenderer, RenderManager } from '../../graphic/renderer'
@@ -34,6 +39,10 @@ type GameGUIProps =
   | {
       mode: WordOrderingGUIMode
       options: WordOrderingGUIOptions & GameHeaderDisplayerOptions
+    }
+  | {
+      mode: RankDisplayGUIMode
+      options: RankDisplayGUIOptions & GameHeaderDisplayerOptions
     }
 
 const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
@@ -91,6 +100,7 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
         gameDisplayRenderer={gameDisplayRendererRef.current}
       />
       {mode === 'WORD_ORDERING' && <WordOrderingGUI options={options} />}
+      {mode === 'RANK_DISPLAY' && <RankDisplayGUI options={options} />}
     </>
   )
 
