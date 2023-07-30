@@ -76,7 +76,7 @@ const GameHeaderDisplayer: React.FC<React.PropsWithChildren<Props>> = ({
 
   return (
     <Header>
-      <Paragraph>SCORE: {score ?? 0}</Paragraph>
+      <Paragraph>SCORE: {score.toFixed(2) ?? 0}</Paragraph>
       <Title>
         <div ref={timerRef}></div>
       </Title>

@@ -144,7 +144,7 @@ Rune.initLogic({
           : length
 
       // apply score to player
-      game.players[playerId].stat.score += score
+      game.players[playerId].stat.score += Number(score.toFixed(2))
 
       const isChanceMatch = (percent: number) => {
         return Math.floor(Math.random() * 100) < percent

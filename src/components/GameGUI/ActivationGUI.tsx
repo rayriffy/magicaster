@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Title from '../Title'
 import { ActivatedCard } from '../../logic'
 import { useRune } from '../../functions/useRune'
@@ -30,6 +30,11 @@ const Card = styled.img`
 
 const ActivationGUI: React.FC<Props> = ({ options }) => {
   const { playerId } = useRune()
+
+  useEffect(() => {
+    Rune.actions.activate()
+  }, [])
+
   const effectedCards = options.cardPool.filter(
     activatedCard => activatedCard.to === playerId
   )
