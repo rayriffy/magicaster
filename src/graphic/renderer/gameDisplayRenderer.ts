@@ -30,6 +30,8 @@ class GameDisplayRenderer implements Renderer {
     if (assets === null) throw "assets aren't load yet"
 
     this.app = new PIXI.Application({ backgroundAlpha: 0 })
+    console.log('DEBUG: app = ', this.app)
+
     this.width = width
     this.height = 0.6 * width
     this.forcusedCharacterIndex = forcusedCharacterIndex

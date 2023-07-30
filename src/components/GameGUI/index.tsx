@@ -70,56 +70,61 @@ type GameGUIProps =
 
 const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
   const renderManagerRef = useRef<RenderManager>(new RenderManager())
-  const gameDisplayRendererRef = useRef<GameDisplayRenderer>(
-    new GameDisplayRenderer({
-      width: window.innerWidth,
-      characterColor: CHARACTER_COLOR_LIST.slice(0, 4),
-      forcusedCharacterIndex: 1,
-    })
-  )
+  const gameDisplayRendererRef = useRef<GameDisplayRenderer | null>(null)
+
+  useEffect(() => {
+    if (mode === 'LOBBY_GUI') {
+      gameDisplayRendererRef.current = new GameDisplayRenderer({
+        width: window.innerWidth,
+        characterColor: CHARACTER_COLOR_LIST.slice(0, 4),
+        forcusedCharacterIndex: 1,
+      })
+      renderManagerRef.current.addRenderer(gameDisplayRendererRef.current)
+    }
+  }, [mode])
 
   useEffect(() => {
     renderManagerRef.current.start()
-    renderManagerRef.current.addRenderer(gameDisplayRendererRef.current)
 
-    setTimeout(() => {
-      const pr = gameDisplayRendererRef.current
-        .getCharacterGroupRenderer()
-        .getCharacterRendererList()[0]
+    // setTimeout(() => {
+    //   const pr = gameDisplayRendererRef.current
+    //     .getCharacterGroupRenderer()
+    //     .getCharacterRendererList()[0]
 
-      gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
-        renderer: new BurnSlotEffect(pr, 3000),
-        onStart: () => console.log('start'),
-        onSuccess: () => console.log('success'),
-      })
+    //   gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
+    //     renderer: new BurnSlotEffect(pr, 3000),
+    //     onStart: () => console.log('start'),
+    //     onSuccess: () => console.log('success'),
+    //   })
 
-      gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
-        renderer: new ReduceManaSlotEffect(pr, 3000),
-        onStart: () => console.log('start1'),
-        onSuccess: () => console.log('success1'),
-      })
+    //   gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
+    //     renderer: new ReduceManaSlotEffect(pr, 3000),
+    //     onStart: () => console.log('start1'),
+    //     onSuccess: () => console.log('success1'),
+    //   })
 
-      gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
-        renderer: new ReduceScoreEffect(pr, 3000),
-        onStart: () => console.log('start4'),
-        onSuccess: () => console.log('success4'),
-      })
+    //   gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
+    //     renderer: new ReduceScoreEffect(pr, 3000),
+    //     onStart: () => console.log('start4'),
+    //     onSuccess: () => console.log('success4'),
+    //   })
 
-      gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
-        renderer: new ScoreBuffEffect(pr, 3000),
-        onStart: () => console.log('start2'),
-        onSuccess: () => console.log('success2'),
-      })
+    //   gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
+    //     renderer: new ScoreBuffEffect(pr, 3000),
+    //     onStart: () => console.log('start2'),
+    //     onSuccess: () => console.log('success2'),
+    //   })
 
-      gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
-        renderer: new ShieldEffect(pr, 3000),
-        onStart: () => console.log('start3'),
-        onSuccess: () => console.log('success3'),
-      })
-    }, 8000)
+    //   gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
+    //     renderer: new ShieldEffect(pr, 3000),
+    //     onStart: () => console.log('start3'),
+    //     onSuccess: () => console.log('success3'),
+    //   })
+    // }, 8000)
     return () => {
       renderManagerRef.current.stop()
-      gameDisplayRendererRef.current.destroy()
+      if (gameDisplayRendererRef.current)
+        gameDisplayRendererRef.current.destroy()
     }
   }, [])
 
@@ -135,6 +140,8 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
   if (mode === 'LOBBY_GUI') {
     return <LobbyGUI options={options} />
   }
+
+  if (gameDisplayRendererRef.current === null) return null
 
   return (
     <>
