@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FunctionComponent, useMemo } from 'react'
 import Container from '../Container'
 import Title from '../Title'
 import CharacterDisplayer from './CharacterDisplayer'
@@ -56,27 +56,18 @@ const ChooseCharacterGUI: React.FC<Props> = ({ renderManager, options }) => {
         <CharacterDisplayersContainer>
           {Array(CHARACTER_NUMBER)
             .fill(1)
-            .map((_, index) => {
-              const isSelected = Object.values(
-                options.characterSelections
-              ).includes(index)
-
-              const isMySelect = index === currentSelectedId
-              return (
-                <CharacterDisplayer
-                  key={index}
-                  renderManager={renderManager}
-                  characterIndex={index}
-                  disabled={isSelected && !isMySelect}
-                  onClick={() => {
-                    if (isSelected) return
-                    setCurrentSelectedId(index)
-                    // if (options.onSelect) options.onSelect(index)
-                  }}
-                  isHighLight={isMySelect}
-                />
-              )
-            })}
+            .map((_, index) => (
+              <CharacterList
+                key={`character-display-${index}`}
+                {...{
+                  index,
+                  renderManager,
+                  characterSelections: options.characterSelections,
+                  currentSelectedId,
+                  onSelect: () => setCurrentSelectedId(index),
+                }}
+              />
+            ))}
         </CharacterDisplayersContainer>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <Button
@@ -88,6 +79,45 @@ const ChooseCharacterGUI: React.FC<Props> = ({ renderManager, options }) => {
         </div>
       </Arranger>
     </Container>
+  )
+}
+
+interface CharacterListProps {
+  index: number
+  currentSelectedId: number
+  renderManager: RenderManager
+  characterSelections: Options['characterSelections']
+  onSelect(): void
+}
+
+const CharacterList: FunctionComponent<CharacterListProps> = ({
+  index,
+  currentSelectedId,
+  renderManager,
+  characterSelections,
+  onSelect,
+}) => {
+  const isSelected = useMemo(
+    () => Object.values(characterSelections).includes(index),
+    []
+  )
+
+  const isMySelect = useMemo(
+    () => index === currentSelectedId,
+    [index, currentSelectedId]
+  )
+
+  return (
+    <CharacterDisplayer
+      renderManager={renderManager}
+      characterIndex={index}
+      disabled={isSelected && !isMySelect}
+      onClick={() => {
+        if (isSelected) return
+        onSelect?.()
+      }}
+      isHighLight={isMySelect}
+    />
   )
 }
 

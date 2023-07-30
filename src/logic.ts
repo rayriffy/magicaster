@@ -14,6 +14,7 @@ type GameActions = {
   setCharacter(targetId: number): void
   setReady(ready: boolean): void
   startGame: () => void
+  submitWord: () => void
 }
 
 declare global {
@@ -32,11 +33,11 @@ Rune.initLogic({
         playerIds.map(id => [
           id,
           {
-            score: 0,
             avatar: null,
             phaseCompleted: false,
             ready: false,
             stat: {
+              score: 0,
               alphabetInventorySize: 16,
               cardInventorySize: 4,
               luck: 1.0,
@@ -58,16 +59,17 @@ Rune.initLogic({
     setReady: (ready, { game, playerId }) => {
       game.players[playerId].ready = ready
     },
+    submitWord: () => {},
   },
   events: {
     playerJoined: (playerId, { game }) => {
       // Handle player joined
       game.players[playerId] = {
-        score: 0,
         avatar: null,
         phaseCompleted: false,
         ready: false,
         stat: {
+          score: 0,
           alphabetInventorySize: 16,
           cardInventorySize: 4,
           luck: 1.0,
