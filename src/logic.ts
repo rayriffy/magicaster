@@ -2,6 +2,7 @@ import { cards } from './constants/cards'
 
 import type { Player } from './@types/Player'
 import type { RuneClient } from 'rune-games-sdk/multiplayer'
+import { words } from './constants/words'
 
 export interface GameState {
   turn: number
@@ -124,6 +125,9 @@ Rune.initLogic({
       }
     },
     submitWord: (word, { game, playerId }) => {
+      const loweredWord = word.toLowerCase()
+      if (words[loweredWord] === undefined) return
+
       const length = word.length
       // determine score player will get
       let score =

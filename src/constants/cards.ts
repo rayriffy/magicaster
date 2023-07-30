@@ -7,8 +7,10 @@ export const cards: Card[] = [
     description:
       "Destroy 2 - 4 alphabetical slots on the other player's side in the upcoming round",
     effect: {
-      alphabetInventorySize: size =>
-        size <= 8 ? size : size - Math.floor(Math.random() * 3) - 2,
+      alphabetInventorySize: size => {
+        const adjustSize = Math.floor(Math.random() * 3) + 2
+        return size - adjustSize < 8 ? 8 : size - adjustSize
+      }
     },
   },
   {
@@ -17,8 +19,10 @@ export const cards: Card[] = [
     description:
       'Increase 2 - 4 alphabetical slots on the your side in the upcoming round',
     effect: {
-      alphabetInventorySize: size =>
-        size <= 8 ? size : size - Math.floor(Math.random() * 3) - 2,
+      alphabetInventorySize: size => {
+        const adjustSize = Math.floor(Math.random() * 3) + 2
+        return size + adjustSize > 24 ? 24 : size + adjustSize
+      },
     },
   },
   {
