@@ -42,6 +42,12 @@ function App() {
         <GameGUI
           mode="LOBBY_GUI"
           options={{
+            characterIndex: Object.fromEntries(
+              Object.entries(game.players).map(([playerID, { avatar }]) => [
+                playerID,
+                avatar ?? 0,
+              ])
+            ),
             playerID: playerId,
             playerLobbyInfos: Object.entries(game.players)
               .filter(([_, player]) => player.avatar !== null)
@@ -60,6 +66,12 @@ function App() {
         <GameGUI
           mode="LOBBY_GUI"
           options={{
+            characterIndex: Object.fromEntries(
+              Object.entries(game.players).map(([playerID, { avatar }]) => [
+                playerID,
+                avatar ?? 0,
+              ])
+            ),
             playerID: playerId,
             playerLobbyInfos: Object.entries(game.players)
               .filter(([_, player]) => player.avatar !== null)
@@ -78,6 +90,12 @@ function App() {
         <GameGUI
           mode="WORD_ORDERING"
           options={{
+            characterIndex: Object.fromEntries(
+              Object.entries(game.players).map(([playerID, { avatar }]) => [
+                playerID,
+                avatar ?? 0,
+              ])
+            ),
             deadline: game.phaseEndAt,
             score: player!.stat.score,
             cardNumber: player!.stat.cardInventory.length,
@@ -97,6 +115,12 @@ function App() {
         <GameGUI
           mode="RANK_DISPLAY"
           options={{
+            characterIndex: Object.fromEntries(
+              Object.entries(game.players).map(([playerID, { avatar }]) => [
+                playerID,
+                avatar ?? 0,
+              ])
+            ),
             deadline: game.phaseEndAt,
             score: player!.stat.score,
             playerRankInfos: Object.entries(game.players)
@@ -118,6 +142,12 @@ function App() {
         <GameGUI
           mode="PLANNING_GUI"
           options={{
+            characterIndex: Object.fromEntries(
+              Object.entries(game.players).map(([playerID, { avatar }]) => [
+                playerID,
+                avatar ?? 0,
+              ])
+            ),
             maxSlot: player!.stat.cardPlayableSize,
             deadline: game.phaseEndAt,
             score: player!.stat.score,

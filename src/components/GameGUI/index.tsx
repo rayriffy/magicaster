@@ -42,6 +42,10 @@ import ScoreBuffEffect from '../../graphic/renderer/effects/scoreBuffEffect'
 import ShieldEffect from '../../graphic/renderer/effects/shieldEffect'
 import ReduceScoreEffect from '../../graphic/renderer/effects/reduceScoreEffect'
 
+type OverAllInfo = {
+  characterIndex: { [playerID: string]: number }
+}
+
 type GameGUIProps =
   | {
       mode: ChooseCharacterGUIMode
@@ -49,19 +53,19 @@ type GameGUIProps =
     }
   | {
       mode: LobbyGUIMode
-      options: LobbyGUIOptions
+      options: LobbyGUIOptions & OverAllInfo
     }
   | {
       mode: WordOrderingGUIMode
-      options: WordOrderingGUIOptions & GameHeaderDisplayerOptions
+      options: WordOrderingGUIOptions & GameHeaderDisplayerOptions & OverAllInfo
     }
   | {
       mode: RankDisplayGUIMode
-      options: RankDisplayGUIOptions & GameHeaderDisplayerOptions
+      options: RankDisplayGUIOptions & GameHeaderDisplayerOptions & OverAllInfo
     }
   | {
       mode: PlanningGUIMode
-      options: PlanningGUIOptions & GameHeaderDisplayerOptions
+      options: PlanningGUIOptions & GameHeaderDisplayerOptions & OverAllInfo
     }
   | {
       mode: ActivationGUIMode
@@ -73,54 +77,64 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
   const gameDisplayRendererRef = useRef<GameDisplayRenderer | null>(null)
 
   useEffect(() => {
-    if (mode === 'LOBBY_GUI') {
+    if (
+      (mode === 'LOBBY_GUI' ||
+        mode === 'WORD_ORDERING' ||
+        mode === 'RANK_DISPLAY' ||
+        mode === 'PLANNING_GUI') &&
+      gameDisplayRendererRef.current === null
+    ) {
       gameDisplayRendererRef.current = new GameDisplayRenderer({
         width: window.innerWidth,
-        characterColor: CHARACTER_COLOR_LIST.slice(0, 4),
+        characterColor: CHARACTER_COLOR_LIST.filter((_, index) =>
+          Object.values(options.characterIndex).includes(index)
+        ),
         forcusedCharacterIndex: 1,
       })
       renderManagerRef.current.addRenderer(gameDisplayRendererRef.current)
+
+      setTimeout(() => {
+        if (gameDisplayRendererRef.current === null) return
+        const pr = gameDisplayRendererRef.current
+          .getCharacterGroupRenderer()
+          .getCharacterRendererList()[0]
+
+        gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
+          renderer: new BurnSlotEffect(pr, 3000),
+          onStart: () => console.log('start'),
+          onSuccess: () => console.log('success'),
+        })
+
+        gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
+          renderer: new ReduceManaSlotEffect(pr, 3000),
+          onStart: () => console.log('start1'),
+          onSuccess: () => console.log('success1'),
+        })
+
+        gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
+          renderer: new ReduceScoreEffect(pr, 3000),
+          onStart: () => console.log('start4'),
+          onSuccess: () => console.log('success4'),
+        })
+
+        gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
+          renderer: new ScoreBuffEffect(pr, 3000),
+          onStart: () => console.log('start2'),
+          onSuccess: () => console.log('success2'),
+        })
+
+        gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
+          renderer: new ShieldEffect(pr, 3000),
+          onStart: () => console.log('start3'),
+          onSuccess: () => console.log('success3'),
+        })
+      }, 8000)
     }
   }, [mode])
 
   useEffect(() => {
     renderManagerRef.current.start()
 
-    // setTimeout(() => {
-    //   const pr = gameDisplayRendererRef.current
-    //     .getCharacterGroupRenderer()
-    //     .getCharacterRendererList()[0]
-
-    //   gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
-    //     renderer: new BurnSlotEffect(pr, 3000),
-    //     onStart: () => console.log('start'),
-    //     onSuccess: () => console.log('success'),
-    //   })
-
-    //   gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
-    //     renderer: new ReduceManaSlotEffect(pr, 3000),
-    //     onStart: () => console.log('start1'),
-    //     onSuccess: () => console.log('success1'),
-    //   })
-
-    //   gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
-    //     renderer: new ReduceScoreEffect(pr, 3000),
-    //     onStart: () => console.log('start4'),
-    //     onSuccess: () => console.log('success4'),
-    //   })
-
-    //   gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
-    //     renderer: new ScoreBuffEffect(pr, 3000),
-    //     onStart: () => console.log('start2'),
-    //     onSuccess: () => console.log('success2'),
-    //   })
-
-    //   gameDisplayRendererRef.current.getEffectQueueRenderer().addEffect({
-    //     renderer: new ShieldEffect(pr, 3000),
-    //     onStart: () => console.log('start3'),
-    //     onSuccess: () => console.log('success3'),
-    //   })
-    // }, 8000)
     return () => {
       renderManagerRef.current.stop()
       if (gameDisplayRendererRef.current)
@@ -140,8 +154,9 @@ const GameGUI: React.FC<GameGUIProps> = ({ mode, options }) => {
   if (mode === 'LOBBY_GUI') {
     return <LobbyGUI options={options} />
   }
-
+  console.log('DEBUG: REACH2')
   if (gameDisplayRendererRef.current === null) return null
+  console.log('DEBUG: REACH')
 
   return (
     <>
